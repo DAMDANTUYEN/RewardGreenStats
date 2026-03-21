@@ -1,46 +1,65 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Khởi tạo Supabase Admin (Bypass RLS)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 export async function POST(request) {
+  // 🛡️ LỚP BẢO MẬT 1: Kiểm tra Secret Key từ Header
+  const receivedSecret = request.headers.get('X-Webhook-Secret');
+  const serverSecret = process.env.GOOGLE_WEBHOOK_SECRET;
+
+  if (!receivedSecret || receivedSecret !== serverSecret) {
+    console.error("⛔ [Cảnh báo] Truy cập trái phép bị chặn!");
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  }
+
   try {
-    const { email, name } = await request.json();
-    if (!email) return new Response('Email missing', { status: 400 });
+    const body = await request.json();
+    const { email, name } = body;
 
-    console.log(`🚀 Đang xử lý Webhook cho: ${email}`);
+    if (!email) {
+      return new Response(JSON.stringify({ error: 'Email is required' }), { status: 400 });
+    }
 
-    
-    const { data: user } = await supabaseAdmin
+    console.log(`🚀 [Webhook] Đang xử lý cho: ${email}`);
+
+    // 🛡️ LỚP BẢO MẬT 2: Xử lý logic an toàn với Database
+    const { data: user, error: findError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('email', email)
       .single();
 
     if (user) {
-      // Đã có -> Cộng lượt quay
-      await supabaseAdmin
+      // Nếu đã có: Cộng thêm 1 lượt quay
+      const { error: updateError } = await supabaseAdmin
         .from('profiles')
         .update({ spins_available: (user.spins_available || 0) + 1 })
         .eq('email', email);
-      console.log("✅ Đã cộng thêm lượt quay.");
+      
+      if (updateError) throw updateError;
+      console.log(`✅ Đã cộng lượt quay cho ${email}.`);
     } else {
-      // Chưa có -> Tạo mới hoàn toàn
-      await supabaseAdmin
+      // Nếu chưa có: Tạo mới profile
+      const { error: insertError } = await supabaseAdmin
         .from('profiles')
         .insert([{ 
           email: email, 
-          display_name: name || 'User', 
+          display_name: name || 'Guest', 
           spins_available: 1 
         }]);
-      console.log("✨ Đã tạo profile mới thành công.");
+
+      if (insertError) throw insertError;
+      console.log(`✨ Đã tạo profile mới cho ${email}.`);
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (error) {
-    console.error("🔥 Error:", error.message);
-    return new Response(error.message, { status: 500 });
+
+  } catch (err) {
+    console.error("🔥 Lỗi thực thi:", err.message);
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }

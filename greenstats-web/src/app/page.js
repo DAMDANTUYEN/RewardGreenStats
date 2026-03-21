@@ -342,10 +342,10 @@ const App = () => {
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         
         .font-poppins {
-          font-family: 'Poppins', sans-serif;
+          /* SỬA THÀNH DÒNG NÀY ĐỂ NHẬN FONT TỪ LAYOUT */
+          font-family: var(--font-poppins), sans-serif;
         }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }

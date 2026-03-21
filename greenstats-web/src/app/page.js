@@ -15,8 +15,8 @@ const App = () => {
     {
       id: 0,
       name: "Vàm Sát - Cần Giờ",
-      titlePart1: "Vàm Sát", // Đảm bảo Vàm Sát nằm cùng 1 dòng
-      titlePart2: "- Cần Giờ",
+      titlePart1: "VAM SAT", // Đảm bảo Vàm Sát nằm cùng 1 dòng
+      titlePart2: "- CAN GIO",
       subtitle: "Chiến lược Marketing Xanh",
       description: "Nghiên cứu này nhằm làm rõ cách các định hướng tiếp thị bền vững ảnh hưởng đến quyết định và hành vi của du khách trong bối cảnh phát triển du lịch xanh tại Việt Nam. Những ý kiến đóng góp chân thành của Anh/Chị sẽ là động lực mạnh mẽ thúc đẩy việc hoàn thiện các chiến dịch marketing trong ngành du lịch.",
       location: "TP. Hồ Chí Minh",
@@ -27,8 +27,8 @@ const App = () => {
     {
       id: 1,
       name: "Nam Cát Tiên",
-      titlePart1: "Nam",
-      titlePart2: "Cát Tiên",
+      titlePart1: "NAM",
+      titlePart2: "CAT TIEN",
       subtitle: "Chiến lược Marketing Xanh",
       description: "Nghiên cứu này nhằm làm rõ cách các định hướng tiếp thị bền vững ảnh hưởng đến quyết định và hành vi của du khách trong bối cảnh phát triển du lịch xanh tại Việt Nam. Những ý kiến đóng góp chân thành của Anh/Chị sẽ là động lực mạnh mẽ thúc đẩy việc hoàn thiện các chiến dịch marketing trong ngành du lịch.",
       location: "Đồng Nai",
@@ -39,8 +39,8 @@ const App = () => {
     {
       id: 2,
       name: "Núi Chúa",
-      titlePart1: "Núi",
-      titlePart2: "Chúa",
+      titlePart1: "NUI",
+      titlePart2: "CHUA",
       subtitle: "Chiến lược Marketing Xanh",
       description: "Nghiên cứu này nhằm làm rõ cách các định hướng tiếp thị bền vững ảnh hưởng đến quyết định và hành vi của du khách trong bối cảnh phát triển du lịch xanh tại Việt Nam. Những ý kiến đóng góp chân thành của Anh/Chị sẽ là động lực mạnh mẽ thúc đẩy việc hoàn thiện các chiến dịch marketing trong ngành du lịch.",
       location: "Ninh Thuận",

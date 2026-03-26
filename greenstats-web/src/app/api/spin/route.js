@@ -1,70 +1,94 @@
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+export async function POST(req) {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        get(name) { return cookieStore.get(name)?.value },
+        set(name, value, options) { cookieStore.set({ name, value, ...options }) },
+        remove(name, options) { cookieStore.set({ name, value: '', ...options }) },
+      },
+    }
+  );
 
-export async function POST(request) {
   try {
-    const { email } = await request.json();
+    const { email } = await req.json();
+    const cleanEmail = email.toLowerCase().trim();
 
-    // 1. Lấy thông tin User & Danh sách Quà đang Active
-    const { data: user } = await supabaseAdmin.from('profiles').expectOne().eq('email', email).single();
-    if (!user || user.spins_available <= 0) return new Response('Hết lượt', { status: 400 });
+    // 1. Kiểm tra Profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('spins_available')
+      .ilike('email', cleanEmail)
+      .maybeSingle();
 
-    const { data: allPrizes } = await supabaseAdmin.from('prizes').select('*').eq('is_active', true).order('sort_order', { ascending: true });
+    if (!profile || profile.spins_available <= 0) {
+      return NextResponse.json({ error: 'Hết lượt quay!' }, { status: 400 });
+    }
 
-    // 2. Kiểm tra kho quà thực tế
-    const { data: stock } = await supabaseAdmin.from('inventory').select('*').eq('is_used', false);
+    // 2. Lấy danh sách giải thưởng
+    const { data: allPrizes, error: prizeErr } = await supabase
+      .from('prizes')
+      .select('*')
+      .eq('is_active', true);
+
+    // --- LOG KIỂM TRA QUÀ ---
+    console.log("DEBUG: Số lượng giải thưởng tìm thấy trong DB:", allPrizes?.length || 0);
     
-    // Lọc lấy những ID quà còn hàng
-    const availablePrizeIds = [...new Set(stock.map(item => item.prize_id))];
-    
-    // 3. Quyết định trúng ô nào
-    let winningPrize;
-    const hasRealPrizes = availablePrizeIds.length > 0;
+    if (!allPrizes || allPrizes.length === 0) {
+      console.error("LỖI: Bảng prizes trống hoặc RLS đang chặn truy cập!");
+      return NextResponse.json({ error: 'Hệ thống quà tặng chưa sẵn sàng (Kiểm tra RLS bảng prizes)!' }, { status: 500 });
+    }
 
-    if (hasRealPrizes) {
-      // Còn quà -> Quay ngẫu nhiên công bằng trên toàn bộ vòng quay
-      winningPrize = allPrizes[Math.floor(Math.random() * allPrizes.length)];
-      
-      // Nếu đen đủi trúng ô quà nhưng ô đó vừa hết sạch (Double check)
-      if (winningPrize.type !== 'NO_PRIZE' && !availablePrizeIds.includes(winningPrize.id)) {
-        winningPrize = allPrizes.find(p => p.type === 'NO_PRIZE');
-      }
+    // 3. Phân loại quà
+    // Tìm Spotify (không phân biệt hoa thường)
+    const spotify = allPrizes.find(p => p.name.toLowerCase().includes('spotify'));
+    // Lấy danh sách các ô slogan (trượt)
+    const noPrizePool = allPrizes.filter(p => p.type === 'NO_PRIZE');
+
+    console.log("DEBUG: Có Spotify không?:", !!spotify, "| Số ô trượt:", noPrizePool.length);
+
+    let winnerPrize = null;
+    const randomNumber = Math.random() * 100;
+
+    // 4. Logic trúng thưởng 1%
+    if (randomNumber <= 1 && spotify && spotify.stock > 0) {
+      winnerPrize = spotify;
+      await supabase.from('prizes').update({ stock: spotify.stock - 1 }).eq('id', spotify.id);
     } else {
-      // HẾT SẠCH QUÀ -> Ép vào ô NO_PRIZE
-      winningPrize = allPrizes.find(p => p.type === 'NO_PRIZE');
+      // Nếu trượt hoặc hết Spotify: Bốc ngẫu nhiên từ danh sách slogan
+      if (noPrizePool.length > 0) {
+        winnerPrize = noPrizePool[Math.floor(Math.random() * noPrizePool.length)];
+      } else {
+        // Chốt chặn cuối: Nếu DB không có ô NO_PRIZE nào, lấy đại ô đầu tiên để ko sập web
+        winnerPrize = allPrizes[0];
+      }
     }
 
-    // 4. Tính toán Target Angle (Hiệu ứng sát nút 90-95%)
-    const prizeIndex = allPrizes.findIndex(p => p.id === winningPrize.id);
-    const anglePerPrize = 360 / allPrizes.length;
-    
-    // Đẩy kim về phía cuối ô (0.4 đến 0.45 là vùng 90-95% của ô tính từ tâm)
-    const nearMissOffset = anglePerPrize * (0.4 + Math.random() * 0.05);
-    const targetAngle = (360 * 10) + (360 - (prizeIndex * anglePerPrize) - (anglePerPrize / 2)) + nearMissOffset;
+    // 5. Cập nhật lượt quay
+    const newSpins = profile.spins_available - 1;
+    await supabase.from('profiles').update({ spins_available: newSpins }).ilike('email', cleanEmail);
 
-    // 5. Cập nhật DB: Trừ lượt quay, trừ quà trong kho (nếu trúng)
-    let wonCode = "N/A";
-    if (winningPrize.type !== 'NO_PRIZE') {
-      const item = stock.find(s => s.prize_id === winningPrize.id);
-      wonCode = item.credential_code;
-      await supabaseAdmin.from('inventory').update({ is_used: true, won_by_email: email }).eq('id', item.id);
-    }
+    // 6. Ghi log lịch sử
+    await supabase.from('spin_history').insert([{
+      user_email: cleanEmail,
+      prize_name: winnerPrize.name,
+      won_code: winnerPrize.type === 'REAL' ? 'WAITING_ADMIN' : 'NO_GIFT'
+    }]);
 
-    await supabaseAdmin.from('profiles').update({ spins_available: user.spins_available - 1 }).eq('email', email);
-    await supabaseAdmin.from('spin_history').insert([{ user_email: email, prize_name: winningPrize.name, won_code: wonCode }]);
-
-    return new Response(JSON.stringify({
-      prizeName: winningPrize.name,
-      gift: wonCode,
-      targetAngle: targetAngle,
-      spinsLeft: user.spins_available - 1
-    }), { status: 200 });
+    return NextResponse.json({
+      prizeName: winnerPrize.name,
+      type: winnerPrize.type,
+      spinsLeft: newSpins
+    });
 
   } catch (err) {
-    return new Response(err.message, { status: 500 });
+    console.error("FATAL ERROR:", err);
+    return NextResponse.json({ error: 'Lỗi xử lý hệ thống!' }, { status: 500 });
   }
 }

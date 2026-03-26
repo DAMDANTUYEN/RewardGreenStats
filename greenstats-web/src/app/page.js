@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, User, Menu, ChevronLeft, ChevronRight, Play, BarChart3, Pause, Sparkles, X, Loader2, Info, ArrowUpRight } from 'lucide-react';
-
+import Link from 'next/link';
 const App = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -15,8 +15,8 @@ const App = () => {
     {
       id: 0,
       name: "Vàm Sát - Cần Giờ",
-      titlePart1: "VAM SAT", // Đảm bảo Vàm Sát nằm cùng 1 dòng
-      titlePart2: "- CAN GIO",
+      titlePart1: "VAM SAT", 
+      titlePart2: "CAN GIO",
       subtitle: "Chiến lược Marketing Xanh",
       description: "Nghiên cứu này nhằm làm rõ cách các định hướng tiếp thị bền vững ảnh hưởng đến quyết định và hành vi của du khách trong bối cảnh phát triển du lịch xanh tại Việt Nam. Những ý kiến đóng góp chân thành của Anh/Chị sẽ là động lực mạnh mẽ thúc đẩy việc hoàn thiện các chiến dịch marketing trong ngành du lịch.",
       location: "TP. Hồ Chí Minh",
@@ -169,9 +169,21 @@ const App = () => {
 
         <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
           <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">Giới thiệu</li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors">Điểm đến</li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors">Vòng quay</li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors">Liên hệ</li>
+          <li>
+            <Link href="/destinations" className="hover:text-emerald-400 cursor-pointer transition-colors">
+              ĐIỂM ĐẾN
+            </Link>
+          </li>
+          <li>
+            <Link href="/spin" className="hover:text-emerald-400 cursor-pointer transition-colors">
+              Vòng quay
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="hover:text-emerald-400 cursor-pointer transition-colors">
+              Liên hệ
+            </Link>
+          </li>
         </ul>
 
         <div className="flex items-center gap-5">
@@ -215,18 +227,16 @@ const App = () => {
           </p>
           
           <div className="flex items-center gap-4 animate-fade-in">
-            <button 
-              onClick={generateAiInsight}
-              className="px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-poppins"
+            <a 
+              href="https://forms.gle/7ZdmfWrk4ksA6vXC9" // <--- THAY LINK GOOGLE FORM CỦA BẠN VÀO ĐÂY
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-poppins text-center"
             >
               Khảo sát ngay
-            </button>
-            <button 
-              onClick={() => setIsPaused(!isPaused)}
-              className="p-3.5 border border-white/10 rounded-full hover:bg-white/5 transition-all active:scale-90"
-            >
-              {isPaused ? <Play size={18} fill="currentColor" /> : <Pause size={18} fill="currentColor" />}
-            </button>
+            </a>
+
+            
           </div>
         </div>
 

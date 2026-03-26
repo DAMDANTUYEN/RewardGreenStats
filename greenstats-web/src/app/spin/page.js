@@ -190,7 +190,63 @@ const App = () => {
           <Menu className="lg:hidden text-white" />
         </div>
       </nav>
-
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
+          
+          {/* Nút Đóng (Góc trên phải) */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
+          >
+            <X size={32} strokeWidth={1.5} />
+          </button>
+          
+          {/* Danh sách Links */}
+          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
+            <li>
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Giới thiệu
+              </Link>
+            </li>
+            
+            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
+            <li>
+              <Link 
+                href="/destinations" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                ĐIỂM ĐẾN
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/spin" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md"
+              >
+                Vòng quay
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/contact" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Liên hệ
+              </Link>
+            </li>
+            
+          </ul>
+        </div>
+      )}
       <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-8">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24 xl:gap-40 w-full max-w-screen-2xl">
           

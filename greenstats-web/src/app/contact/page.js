@@ -75,7 +75,56 @@ export default function ContactPage() {
           <Menu size={18} className="lg:hidden" />
         </div>
       </nav>
-
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
+          
+          {/* Nút Đóng (Góc trên phải) */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
+          >
+            <X size={32} strokeWidth={1.5} />
+          </button>
+          
+          {/* Danh sách Links */}
+          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
+            <li>
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Giới thiệu
+              </Link>
+            </li>
+            
+            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
+            <li>
+              <Link 
+                href="/destinations" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                ĐIỂM ĐẾN
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/spin" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Vòng quay
+              </Link>
+            </li>
+            
+            
+            
+            {/* Nút Khảo sát */}
+          </ul>
+        </div>
+      )}
       {/* --- Nội dung chính --- */}
       <motion.div 
         className="relative z-10 w-full max-w-6xl mx-auto px-4 py-12 md:flex-1 flex flex-col items-center justify-center gap-8 md:gap-12"

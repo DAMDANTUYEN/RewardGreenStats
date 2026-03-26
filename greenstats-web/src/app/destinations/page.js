@@ -123,7 +123,65 @@ const DestinationsPage = () => {
           <Menu size={18} className="lg:hidden" />
         </div>
       </nav>
-
+      {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
+          
+          {/* Nút Đóng (Góc trên phải) */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
+          >
+            <X size={32} strokeWidth={1.5} />
+          </button>
+          
+          {/* Danh sách Links */}
+          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
+            <li>
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Giới thiệu
+              </Link>
+            </li>
+            
+            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
+            <li>
+              <Link 
+                href="/destinations" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md"
+              >
+                ĐIỂM ĐẾN
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/spin" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Vòng quay
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/contact" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Liên hệ
+              </Link>
+            </li>
+            
+            
+          </ul>
+        </div>
+      )}
       {/* Main Content */}
       <main className="relative z-40 flex-1 w-full max-w-7xl mx-auto pt-16 pb-24 px-6 md:px-12">
         {/* Header Section */}

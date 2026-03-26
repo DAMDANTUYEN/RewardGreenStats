@@ -5,7 +5,7 @@ import Link from 'next/link';
 const App = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // Gemini API States
   const [aiResponse, setAiResponse] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -189,10 +189,72 @@ const App = () => {
         <div className="flex items-center gap-5">
           <Search size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
           <User size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <Menu size={18} className="lg:hidden" />
+          <Menu 
+            size={18} 
+            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
+            onClick={() => setIsMobileMenuOpen(true)} 
+          />
         </div>
       </nav>
-
+      {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
+          
+          {/* Nút Đóng (Góc trên phải) */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
+          >
+            <X size={32} strokeWidth={1.5} />
+          </button>
+          
+          {/* Danh sách Links */}
+          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
+            <li>
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md"
+              >
+                Giới thiệu
+              </Link>
+            </li>
+            
+            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
+            <li>
+              <Link 
+                href="/destinations" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                ĐIỂM ĐẾN
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/spin" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Vòng quay
+              </Link>
+            </li>
+            
+            <li>
+              <Link 
+                href="/contact" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="text-white/70 hover:text-emerald-400 transition-colors"
+              >
+                Liên hệ
+              </Link>
+            </li>
+            
+            {/* Nút Khảo sát */}
+          </ul>
+        </div>
+      )}
       {/* Main Content */}
       <main className="relative z-40 flex flex-col items-center justify-center flex-1 w-full pt-8 pb-12 px-4">
         

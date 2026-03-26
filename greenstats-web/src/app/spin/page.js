@@ -150,12 +150,27 @@ const App = () => {
         </Link>
 
         {/* Menu giữa */}
-        <ul className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase opacity-80">
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">Giới thiệu</li>
-          <li><Link href="/destinations" className="hover:text-emerald-400 transition-colors">ĐIỂM ĐẾN</Link></li>
-          <li><Link href="/spin" className="text-emerald-400 transition-colors">Vòng quay</Link></li>
-          <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Liên hệ</Link></li>
-        </ul>
+        <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
+  {/* Đã thêm Link và italic, bỏ gạch chân */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+    <Link href="/">Giới thiệu</Link>
+  </li>
+  
+  {/* Đã thêm italic và mang gạch chân xuống đây vì đang ở trang Điểm Đến */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors ">
+    <Link href="/destinations">ĐIỂM ĐẾN</Link>
+  </li>
+  
+  {/* Đã thêm italic */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">
+    <Link href="/spin">Vòng quay</Link>
+  </li>
+  
+  {/* Đã thêm italic */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+    <Link href="/contact">Liên hệ</Link>
+  </li>
+</ul>
 
         {/* Auth Section */}
         <div className="flex items-center gap-4">
@@ -249,7 +264,7 @@ const App = () => {
                )}
             </div>
           </div>
-
+          
           {/* CỘT PHẢI: TRẠNG THÁI */}
           <div className="hidden xl:flex flex-col gap-6 w-64 order-3">
              <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[3rem] backdrop-blur-xl shadow-2xl text-center">

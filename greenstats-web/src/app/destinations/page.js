@@ -1,77 +1,79 @@
 "use client";
 import React, { useState } from 'react';
-import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronRight, Compass } from 'lucide-react';
+import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 const DestinationsPage = () => {
-  // Dữ liệu đã được làm giàu (Enriched Data) với các thông tin chuyên sâu
+  // State quản lý việc mở rộng nội dung của từng địa điểm
+  const [expandedId, setExpandedId] = useState(null);
+
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
+
+  // Dữ liệu chi tiết nạp từ tài liệu nghiên cứu
   const destinationsData = [
     {
       id: 0,
-      name: "Vàm Sát - Cần Giờ",
-      titlePart1: "VAM SAT", 
-      titlePart2: "CAN GIO",
-      subtitle: "Khu Du Lịch Sinh Thái",
-      description: "Được UNESCO công nhận là khu dự trữ sinh quyển thế giới đầu tiên tại Việt Nam. Nghiên cứu này nhằm làm rõ cách các định hướng tiếp thị bền vững ảnh hưởng đến quyết định và hành vi của du khách. Vàm Sát sở hữu hệ sinh thái rừng ngập mặn độc đáo, đóng vai trò quan trọng trong việc hấp thụ Carbon (Blue Carbon) và bảo vệ bờ biển.",
-      location: "TP. Hồ Chí Minh",
-      image: "https://mia.vn/media/uploads/blog-du-lich/khu-du-lich-sinh-thai-vam-sat-14-1696648113.jpg",
-      stats: {
-        area: "75.740 ha (Toàn khu Cần Giờ)",
-        biodiversity: "Hơn 700 loài động thực vật",
-        highlight: "Đầm Dơi, Sân Chim, Rừng Đước",
-        ecoRole: "Bể chứa Carbon, chống xói mòn"
-      },
-      tags: ["Rừng ngập mặn", "Blue Carbon", "UNESCO"],
+      name: "Khu du lịch sinh thái Vàm Sát",
+      subtitle: "Khu Dự trữ Sinh quyển Thế giới - Cần Giờ",
+      location: "Xã Lý Nhơn, huyện Cần Giờ, TP.HCM",
+      image: "https://images.vietnamtourism.gov.vn/vn/images/2021/CNMN/Thang5/14.5.rung_vam_sat_1137421235.jpg",
+      subImages: [
+        "https://vamsat.vn/wp-content/uploads/2018/04/10-2011To03BaoAnh12102011145643477.jpg",
+        "https://vamsat.vn/wp-content/uploads/2018/03/6e6e52cb-fc09-47a7-ba50-dfa4a008d0ba-3.jpg"
+      ],
+      history: "Cái tên Vàm Sát phiên âm từ tiếng Khmer 'Peám Sak' (Ngã ba sông có nhiều cây Mấm). Lịch sử bắt đầu từ chiến dịch trồng lại rừng Cần Giờ năm 1979 của Thanh niên Xung phong. Sau chiến tranh, bom đạn và chất độc hóa học đã biến nơi đây thành 'Vùng đất chết'. Đến năm 1999, Vàm Sát được Phuthotourist quản lý, khôi phục hệ sinh thái ngập mặn lên đến hơn 31.000 ha rừng.",
+      ecology: "Là khu dự trữ sinh quyển thế giới đầu tiên tại Việt Nam được UNESCO công nhận. Thảm thực vật đa dạng với hơn 150 loài như đước, cóc, mấm, bần... Trong đó, cây Đước đóng vai trò quan trọng nhờ hệ thống rễ chống xâm thực hiệu quả. Đây là 'mái nhà' của hơn 130 loài cá, bò sát và chim, đóng vai trò lọc bỏ chất độc từ thượng nguồn trước khi đổ ra biển Đông.",
+      highlights: "Cá sấu Xiêm và cá sấu Hoa Cà nuôi thả tự nhiên; Khỉ Đuôi Dài hoang dã; Đàn Dơi Nghệ quý hiếm sống trong rừng sâu; Sân chim tự nhiên trên những ngọn cây cao.",
+      tags: ["UNESCO", "Blue Carbon", "Rừng Sác"],
       icon: <Droplets className="text-emerald-400" size={24} />
     },
     {
       id: 1,
-      name: "Nam Cát Tiên",
-      titlePart1: "NAM",
-      titlePart2: "CAT TIEN",
-      subtitle: "Vườn Quốc Gia",
-      description: "Một trong những trung tâm đa dạng sinh học quan trọng nhất của Việt Nam, nơi bảo tồn nhiều loài động vật quý hiếm có tên trong Sách Đỏ. Chiến dịch 'Du lịch không dấu chân' tại đây là một điểm sáng trong Green Marketing, nhấn mạnh vào việc khám phá thiên nhiên nhưng không làm ảnh hưởng đến hệ sinh thái nguyên sinh.",
-      location: "Đồng Nai",
-      image: "https://cdn.nhandan.vn/images/09e094bf85219244ca8a426249e6fc5be7d7a159725dd41ad22728accdbeb8f4defea2ed10dac59bd634d29ada23da7382210a66265fdfd3f625eb92838bd2d837090969c61a54f6c00e9a07645ecbdb0ab47f0555d0e89c2ff233978e7c5c40b40f3a8dbcbd0070206be3ad8d4611e85cfacd5ee898d181029010948d9846a0/den-vuon-quoc-gia-cat-tien-tay-cat-tien-kham-pha-thien-nhien-ky-thu-01-1656498315.jpg",
-      stats: {
-        area: "71.350 ha",
-        biodiversity: "Hơn 1.610 loài thực vật, 1.529 loài động vật",
-        highlight: "Bàu Sấu, Đảo Tiên, Trekking xuyên rừng",
-        ecoRole: "Lá phổi xanh, Bảo tồn gen quý"
-      },
-      tags: ["Rừng nguyên sinh", "Trekking", "Sách Đỏ"],
+      name: "Vườn Quốc gia Nam Cát Tiên",
+      subtitle: "Di tích Quốc gia Đặc biệt - Di sản UNESCO",
+      location: "Đồng Nai, Lâm Đồng và Bình Phước",
+      image: "https://dsvh.gov.vn/ckfinder/userfiles/images/Thong%20tin%20ds/Canh%20quan%20Bau%20Sau%20_%20Cat%20Tien.jpg",
+      subImages: [
+        "https://cattiennationalpark.com.vn/wp-content/uploads/2023/03/word-image-6718-1.jpeg",
+        "https://images.vietnamtourism.gov.vn/vn/images/1/thang_7-_travel%2B/25.7/vqg_cat_tien/cat_tien_3.jpg"
+      ],
+      history: "Nơi đây lưu giữ nền văn hóa cổ với 12 di chỉ khảo cổ dạng gò. Các nhà khảo cổ đã tìm thấy tượng Ganesa, Linga - Yoni bằng thạch anh và vàng có kích thước lớn nhất Việt Nam. Đây cũng là không gian cư trú lâu đời của các dân tộc Mạ, Chơro, S’Tiêng... với nhiều lễ hội hiến tế trâu và mừng lúa mới đặc sắc.",
+      ecology: "Bảo tồn 1.610 loài thực vật và 1.568 loài động vật, trong đó hàng chục loài nằm trong Sách Đỏ. Đây là môi trường sống của các loài cực kỳ quý hiếm như Chà vá chân đen, Hoẵng Nam Bộ. Hệ sinh thái rừng bao gồm rừng thường xanh lá rộng, rừng tre nứa (Lồ Ô, Mum) và các thảm thực vật đất ngập nước nội địa.",
+      highlights: "Bàu Sấu (92,63 ha) với 100 cá thể cá Sấu Xiêm; Sông Đồng Nai dài 90km; Các thác nước hùng vĩ như Thác Trời, Bến Cự.",
+      tags: ["Ramsar", "Sách Đỏ", "Khảo cổ"],
       icon: <Trees className="text-emerald-400" size={24} />
     },
     {
       id: 2,
-      name: "Núi Chúa",
-      titlePart1: "NUI",
-      titlePart2: "CHUA",
-      subtitle: "Vườn Quốc Gia",
-      description: "Được mệnh danh là 'Thảo nguyên cây gai' độc nhất vô nhị tại Việt Nam, Núi Chúa mang đặc trưng của rừng khô hạn. Việc kết hợp giữa bảo tồn rùa biển và du lịch cao cấp bền vững tại đây là mô hình marketing xanh tuyệt vời, mang lại giá trị kinh tế đi đôi với ý thức bảo vệ môi trường biển.",
-      location: "Ninh Thuận",
-      image: "https://mia.vn/media/uploads/blog-du-lich/vuon-quoc-gia-nui-chua-khu-du-tru-sinh-quyen-moi-cua-the-gioi-6-1658159836.jpg",
-      stats: {
-        area: "29.865 ha",
-        biodiversity: "1.511 loài thực vật, 765 loài động vật",
-        highlight: "Hang Rái, Vịnh Vĩnh Hy, Bảo tồn rùa",
-        ecoRole: "Rừng khô hạn duy nhất, Bảo tồn biển"
-      },
-      tags: ["Rừng khô hạn", "Bảo tồn biển", "Du lịch cao cấp"],
+      name: "Vườn quốc gia Núi Chúa",
+      subtitle: "Thảo nguyên cây gai độc bản - Ninh Thuận",
+      location: "Huyện Ninh Hải và Thuận Bắc, Ninh Thuận",
+      image: "https://nbca.gov.vn/wp-content/uploads/2023/10/VQG-nui-chua-2.jpg",
+      subImages: [
+        "https://weex.vn/pic/blog/images/093312-internet---h--sinh-th-i--a-d-ng---vqg-n-i-ch-a.jpg",
+        "https://images.vietnamtourism.gov.vn/vn//images/2021/Thang_6/hang-rai-ninh-thuan_01.jpg"
+      ],
+      history: "Từng là Chiến khu CK19 oanh liệt thời kháng chiến chống Pháp - Mỹ. Hiện nay là nơi sinh sống của người Kinh, Raglay, Chăm... với các lễ hội đua ghe, thờ cá Ông. Núi Chúa mang những dấu tích địa chất đặc trưng của vùng duyên hải Nam Trung Bộ với cấu trúc núi nằm sát bờ biển.",
+      ecology: "Mẫu chuẩn duy nhất về hệ sinh thái rừng khô hạn tại Việt Nam. Bảo tồn 1.054 loài thực vật và 306 loài động vật (nổi bật là Chà Vá chân đen). Khu bảo tồn biển rộng 7.352 ha với 350 loài san hô, là bãi đẻ quan trọng của các loài rùa biển quý hiếm như Rùa xanh (Chelonia mydas) và Đồi mồi.",
+      highlights: "Hang Rái; Vịnh Vĩnh Hy; Cánh đồng đá khổng lồ kỳ dị; Bãi Thịt - nơi rùa biển đẻ trứng.",
+      tags: ["Rừng khô hạn", "Bảo tồn rùa", "San hô"],
       icon: <Sun className="text-emerald-400" size={24} />
     }
   ];
 
   return (
-    <div className="relative min-h-screen w-full font-sans text-white overflow-x-hidden bg-zinc-950 flex flex-col">
-      {/* Background Layer (Fixed & Subtle) */}
+    <div className="relative min-h-screen w-full bg-zinc-950 text-white overflow-x-hidden flex flex-col selection:bg-emerald-500/30">
+      
+      {/* Background Layer */}
       <div className="fixed inset-0 z-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#10b981_0%,transparent_50%)]"></div>
         <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-3xl"></div>
       </div>
 
-      {/* Navbar (Giữ nguyên từ trang Landing Page) */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 md:px-16 bg-zinc-950/50 backdrop-blur-md border-b border-white/5 sticky top-0">
+      {/* NAVBAR MỚI THEO YÊU CẦU */}
+      <nav className="relative z-50 flex items-center justify-between px-8 py-6 md:px-16">
         <div className="flex items-center gap-3 group cursor-pointer">
           <div className="relative">
             <div className="absolute -inset-3 bg-emerald-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -94,20 +96,26 @@ const DestinationsPage = () => {
         </div>
 
         <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
-          <li>
-            <Link href="/" className="hover:text-emerald-400 cursor-pointer transition-colors">Giới thiệu</Link>
-                  </li>
-                  <li>
-            <Link href="/destinations" className="hover:text-emerald-400 cursor-pointer transition-colors">Điểm đến</Link>
-          </li>
-          <li>
-            <Link href="/spin" className="hover:text-emerald-400 cursor-pointer transition-colors">Vòng quay</Link>
-          </li>
-          
-          <li>
-            <Link href="/contact" className="hover:text-emerald-400 cursor-pointer transition-colors">Liên hệ</Link>
-          </li>
-        </ul>
+  {/* Đã thêm Link và italic, bỏ gạch chân */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+    <Link href="/">Giới thiệu</Link>
+  </li>
+  
+  {/* Đã thêm italic và mang gạch chân xuống đây vì đang ở trang Điểm Đến */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">
+    <Link href="/destinations">ĐIỂM ĐẾN</Link>
+  </li>
+  
+  {/* Đã thêm italic */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+    <Link href="/spin">Vòng quay</Link>
+  </li>
+  
+  {/* Đã thêm italic */}
+  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+    <Link href="/contact">Liên hệ</Link>
+  </li>
+</ul>
 
         <div className="flex items-center gap-5">
           <Search size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
@@ -117,125 +125,119 @@ const DestinationsPage = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-40 flex-1 w-full max-w-6xl mx-auto pt-12 pb-24 px-6 md:px-12">
-        
+      <main className="relative z-40 flex-1 w-full max-w-7xl mx-auto pt-16 pb-24 px-6 md:px-12">
         {/* Header Section */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-[1px] bg-emerald-500/50"></div>
-            <span className="text-emerald-400 font-bold uppercase tracking-[0.3em] text-[10px] md:text-[11px] font-poppins flex items-center gap-2">
-              <Compass size={14} /> Hệ sinh thái xanh
-            </span>
-            <div className="w-8 h-[1px] bg-emerald-500/50"></div>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 drop-shadow-lg">
-            Khám phá các điểm đến
+        <div className="text-center mb-24 animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic">
+            HỆ SINH THÁI <span className="text-emerald-500">TRỌNG ĐIỂM</span>
           </h1>
-          <p className="text-sm md:text-base opacity-60 max-w-2xl mx-auto font-light leading-relaxed">
-            Chi tiết về các khu vực bảo tồn và du lịch sinh thái trọng điểm, nơi chiến lược Green Marketing được áp dụng nhằm thúc đẩy du lịch bền vững tại Việt Nam.
-          </p>
+          <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] opacity-40">Tài liệu lưu trữ nghiên cứu GreenStats 2026</p>
         </div>
 
         {/* Destinations List */}
-        <div className="space-y-24">
-          {destinationsData.map((dest, index) => (
-            <div 
-              key={dest.id} 
-              className={`flex flex-col lg:flex-row gap-8 lg:gap-16 items-center ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}
-            >
-              {/* Image Section */}
-              <div className="w-full lg:w-1/2 relative group">
-                <div className="absolute -inset-4 bg-emerald-500/10 rounded-[3rem] blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-                <div className="relative h-[350px] md:h-[450px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
-                  <img 
-                    src={dest.image} 
-                    alt={dest.name}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent opacity-80"></div>
-                  
-                  <div className="absolute bottom-0 left-0 p-8 w-full">
-                    <div className="flex gap-2 mb-3">
-                      {dest.tags.map((tag, i) => (
-                        <span key={i} className="px-3 py-1 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 rounded-full text-[9px] uppercase tracking-widest font-bold text-emerald-300 font-poppins">
-                          {tag}
-                        </span>
+        <div className="space-y-40">
+          {destinationsData.map((dest) => (
+            <div key={dest.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+              
+              {/* Left Column: Image Gallery */}
+              <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-4">
+                <div className="relative group overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl aspect-[4/5] bg-zinc-900">
+                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
+                  <div className="absolute bottom-8 left-8 right-8">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {dest.tags.map((tag, tIdx) => (
+                        <span key={tIdx} className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 backdrop-blur-md rounded-full text-[9px] font-black uppercase italic text-emerald-400 tracking-widest">{tag}</span>
                       ))}
                     </div>
-                    <h2 className="text-4xl font-black uppercase tracking-tighter leading-none mb-2 text-white">
-                      {dest.name}
-                    </h2>
-                    <p className="flex items-center gap-1.5 text-sm text-zinc-300 font-light">
-                      <MapPin size={14} className="text-emerald-500" /> {dest.location}
-                    </p>
+                    <h2 className="text-4xl font-black uppercase italic leading-none mb-2">{dest.name}</h2>
+                    <p className="text-[10px] font-bold text-emerald-500/80 uppercase tracking-widest flex items-center gap-2 italic"><MapPin size={12}/> {dest.location}</p>
                   </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                   {dest.subImages.map((img, iIdx) => (
+                     <div key={iIdx} className="rounded-[2rem] overflow-hidden border border-white/5 aspect-square bg-zinc-900">
+                        <img src={img} className="w-full h-full object-cover opacity-50 hover:opacity-100 transition-opacity" alt="sub" />
+                     </div>
+                   ))}
                 </div>
               </div>
 
-              {/* Info Section */}
-              <div className="w-full lg:w-1/2 flex flex-col justify-center">
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="p-3 bg-zinc-900 border border-emerald-500/20 rounded-2xl shadow-lg">
-                    {dest.icon}
-                  </div>
+              {/* Right Column: Info & Expanded Detail */}
+              <div className="lg:col-span-7 space-y-8 pt-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">{dest.icon}</div>
                   <div>
-                    <h3 className="text-emerald-500 font-bold uppercase tracking-[0.2em] text-[10px] font-poppins mb-1">
-                      Phân loại
-                    </h3>
-                    <p className="text-lg font-semibold tracking-tight">{dest.subtitle}</p>
+                    <p className="text-emerald-500 font-black text-[10px] uppercase tracking-widest italic">Phân loại & Cấp bậc</p>
+                    <h3 className="text-xl font-black uppercase italic tracking-tight">{dest.subtitle}</h3>
                   </div>
                 </div>
 
-                <p className="text-sm leading-relaxed opacity-70 mb-8 font-light text-justify">
-                  {dest.description}
-                </p>
+                {/* --- PHẦN NỘI DUNG MỞ RỘNG (ẨN/HIỆN) --- */}
+                <div className={`overflow-hidden transition-all duration-700 ease-in-out ${expandedId === dest.id ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="space-y-10 py-6">
+                        <section className="p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] space-y-4">
+                            <div className="flex items-center gap-3 text-emerald-400">
+                                <History size={20} />
+                                <h4 className="font-black uppercase italic tracking-widest text-sm">Lịch sử & Hình thành</h4>
+                            </div>
+                            <p className="text-[13px] leading-relaxed text-zinc-400 uppercase tracking-tight font-medium text-justify">{dest.history}</p>
+                        </section>
 
-                {/* Stats Bento Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                    <Leaf size={16} className="text-emerald-400 mb-2" />
-                    <h4 className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest font-poppins mb-1">Hệ sinh thái</h4>
-                    <p className="text-sm font-medium">{dest.stats.biodiversity}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                    <MapPin size={16} className="text-emerald-400 mb-2" />
-                    <h4 className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest font-poppins mb-1">Diện tích</h4>
-                    <p className="text-sm font-medium">{dest.stats.area}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                    <Sun size={16} className="text-emerald-400 mb-2" />
-                    <h4 className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest font-poppins mb-1">Điểm nổi bật</h4>
-                    <p className="text-sm font-medium">{dest.stats.highlight}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                    <Shield size={16} className="text-emerald-400 mb-2" />
-                    <h4 className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest font-poppins mb-1">Vai trò sinh thái</h4>
-                    <p className="text-sm font-medium">{dest.stats.ecoRole}</p>
-                  </div>
+                        <section className="space-y-4 px-4">
+                            <div className="flex items-center gap-3 text-emerald-400">
+                                <Leaf size={20} />
+                                <h4 className="font-black uppercase italic tracking-widest text-sm">Hệ sinh thái & Bảo tồn</h4>
+                            </div>
+                            <p className="text-[13px] leading-relaxed text-zinc-300 uppercase tracking-tight font-bold text-justify">{dest.ecology}</p>
+                        </section>
+
+                        <section className="p-8 border-l-4 border-emerald-500 bg-emerald-500/5 rounded-r-[3rem] space-y-4">
+                            <div className="flex items-center gap-3 text-emerald-400">
+                                <Zap size={20} />
+                                <h4 className="font-black uppercase italic tracking-widest text-sm">Điểm nhấn đặc biệt</h4>
+                            </div>
+                            <p className="text-[13px] italic leading-relaxed text-emerald-100/80 uppercase font-bold">{dest.highlights}</p>
+                        </section>
+                    </div>
                 </div>
 
-                {/* Call to action */}
-                <div>
-                  <Link 
-                    href="/" 
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 border border-emerald-500/30 text-white font-bold uppercase text-[11px] tracking-widest rounded-full hover:bg-emerald-500 hover:border-emerald-500 transition-all active:scale-95 font-poppins group"
+                {/* --- NÚT ĐIỀU KHIỂN CHI TIẾT --- */}
+                <div className="pt-6 border-t border-white/5">
+                  <button 
+                    onClick={() => toggleExpand(dest.id)}
+                    className="group inline-flex items-center gap-4 px-12 py-5 bg-white text-black font-black uppercase italic text-xs tracking-[0.4em] rounded-full hover:bg-emerald-500 hover:text-white transition-all shadow-[0_0_50px_rgba(16,185,129,0.2)] active:scale-95"
                   >
-                    Quay lại tương tác AI
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                    {expandedId === dest.id ? (
+                      <>THU GỌN <ChevronUp size={20} className="group-hover:-translate-y-1 transition-transform" /></>
+                    ) : (
+                      <>XEM CHI TIẾT <ChevronDown size={20} className="group-hover:translate-y-1 transition-transform" /></>
+                    )}
+                  </button>
                 </div>
               </div>
+
             </div>
           ))}
         </div>
       </main>
 
+      {/* Footer */}
+      <footer className="py-20 border-t border-white/5 text-center">
+         <p className="text-[10px] font-black uppercase tracking-[0.8em] opacity-20 italic">GreenStats Heritage Data Project © 2026</p>
+      </footer>
+
+      {/* CSS Forcing Times New Roman & Animations */}
       <style dangerouslySetInnerHTML={{ __html: `
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
+        * { font-family: 'Times New Roman', Times, serif !important; }
+        
+        /* ĐẢM BẢO NAV LIÊN HỆ DÙNG POPS ĐỂ KHÔNG BỊ OVERRIDE BỞI TNR */
+        .font-poppins { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important; }
+        
+        body { background: #09090b; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}} />
     </div>
   );

@@ -13,13 +13,13 @@ export default function ContactPage() {
     degree: "Tiến sĩ",
     major: "Du Lịch",
     faculty: "Khoa KHXH&NV",
-    image: "https://i.postimg.cc/L5y8xBhb/TUYN.jpg" 
+    image: "https://i.postimg.cc/v8qYRnh0/z7661811618532_0687e82571b6710f1c40396407821101.jpg" 
   };
 
   const students = [
-    { id: 1, name: "Đỗ Thị Thúy Hằng", faculty: "Khoa KHXH&NV", major: "Quản lí du lịch", phone: "0123 456 789", image: "https://i.postimg.cc/XJk8P40G/z7661806509843_f48f7a1b883fbd52caa5e1fabd42130a.jpg" },
+    { id: 1, name: "Đỗ Thị Thúy Hằng", faculty: "Khoa KHXH&NV", major: "Quản lí du lịch", phone: "0362 944 056", image: "https://i.postimg.cc/gkxYG0Bk/z7661811616236_12b84b1ec0343d237e4270fd12187ba3.jpg" },
     { id: 2, name: "Đàm Đan Tuyên", faculty: "Khoa KHXH&NV", major: "Quản lí du lịch", phone: "0342 772 795", image: "https://i.postimg.cc/W3wnyTP7/z7661806506519_1169bce869f0aa575503da48039bcc03.jpg" },
-    { id: 3, name: "Mai Khánh Huyền", faculty: "Khoa KHXH&NV", major: "Quản lí du lịch", phone: "0123 456 789", image: "https://sjv1f6z76labxq2f.public.blob.vercel-storage.com/z7661782739966_0195509932300b3b59873b30252d7b9a.jpg" },
+    { id: 3, name: "Mai Khánh Huyền", faculty: "Khoa KHXH&NV", major: "Quản lí du lịch", phone: "", image: "https://i.postimg.cc/3JkK3wbT/z7661811613243_6647788579461965629eb0c9aabb1ad2.jpg" },
   ];
 
   const containerVariants = {

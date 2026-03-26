@@ -10,7 +10,7 @@ const poppins = Poppins({
 
 export const metadata = {
   title: "GreenStats - Chiến lược Marketing Xanh",
-  description: "Khám phá du lịch sinh thái bền vững cùng Trợ lý AI",
+  description: "Khảo sát du lịch sinh xanh bền vững tại Việt Nam, hướng đến giải pháp phát triển du lịch thân thiện môi trường.",
   icons: {
     icon: "/logo.svg", 
     apple: "/logo.svg",

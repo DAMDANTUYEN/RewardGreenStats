@@ -137,7 +137,7 @@ const App = () => {
       {/* BACKGROUND VIDEO */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-30 scale-105">
-          <source src="https://sjv1f6z76labxq2f.public.blob.vercel-storage.com/Flycam%20r%E1%BB%ABng%20s%C3%A1c%20C%E1%BA%A7n%20Gi%E1%BB%9D.mp4" type="video/mp4" />
+          <source src="https://sjv1f6z76labxq2f.public.blob.vercel-storage.com/7661844536024.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
       </div>

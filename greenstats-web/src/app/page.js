@@ -274,15 +274,6 @@ const App = () => {
                     {dest.name}
                   </h3>
                   
-                  {activeTab === index && (
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); generateAiInsight(); }}
-                      className="bg-emerald-500 hover:bg-emerald-400 transition-colors px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg border border-white/10 group/btn animate-fade-in"
-                    >
-                      <ArrowUpRight size={13} className="text-white group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                      <span className="text-[9px] font-black text-white font-poppins">Chi tiết</span>
-                    </button>
-                  )}
                 </div>
               </div>
 

@@ -37,7 +37,7 @@ export async function POST(request) {
       // Nếu đã có: Cộng thêm 1 lượt quay
       const { error: updateError } = await supabaseAdmin
         .from('profiles')
-        .update({ spins_available: (user.spins_available || 0) + 1 })
+        .update({ spins_available: (user.spins_available || 0) + 5 })
         .eq('email', email);
       
       if (updateError) throw updateError;

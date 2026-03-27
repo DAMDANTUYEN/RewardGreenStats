@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, User, Menu, ChevronLeft, ChevronRight, Play, BarChart3, Pause, Sparkles, X, Loader2, Info, ArrowUpRight } from 'lucide-react';
+import { Search, User, Menu, X, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 const App = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Gemini API States
-  const [aiResponse, setAiResponse] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showAiModal, setShowAiModal] = useState(false);
 
   const destinations = [
     {
@@ -22,7 +21,6 @@ const App = () => {
       location: "TP. Hồ Chí Minh",
       image: "https://mia.vn/media/uploads/blog-du-lich/khu-du-lich-sinh-thai-vam-sat-14-1696648113.jpg",
       stats: "Khu du lịch sinh thái",
-      prompt: "Hãy phân tích chi tiết chiến lược Green Marketing cho khu du lịch Vàm Sát - Cần Giờ. Tập trung vào 4P (Product, Price, Place, Promotion) trong bối cảnh du lịch sinh quyển bền vững."
     },
     {
       id: 1,
@@ -34,7 +32,6 @@ const App = () => {
       location: "Đồng Nai",
       image: "https://cdn.nhandan.vn/images/09e094bf85219244ca8a426249e6fc5be7d7a159725dd41ad22728accdbeb8f4defea2ed10dac59bd634d29ada23da7382210a66265fdfd3f625eb92838bd2d837090969c61a54f6c00e9a07645ecbdb0ab47f0555d0e89c2ff233978e7c5c40b40f3a8dbcbd0070206be3ad8d4611e85cfacd5ee898d181029010948d9846a0/den-vuon-quoc-gia-cat-tien-tay-cat-tien-kham-pha-thien-nhien-ky-thu-01-1656498315.jpg",
       stats: "Vườn quốc gia",
-      prompt: "Dựa trên nghiên cứu về đa dạng sinh học tại Nam Cát Tiên, hãy đề xuất 3 ý tưởng sáng tạo cho chiến dịch truyền thông 'Du lịch không dấu chân' để thu hút khách quốc tế."
     },
     {
       id: 2,
@@ -46,7 +43,6 @@ const App = () => {
       location: "Ninh Thuận",
       image: "https://mia.vn/media/uploads/blog-du-lich/vuon-quoc-gia-nui-chua-khu-du-tru-sinh-quyen-moi-cua-the-gioi-6-1658159836.jpg",
       stats: "Vườn quốc gia",
-      prompt: "Phân tích tiềm năng kết hợp giữa bảo tồn rùa biển và du lịch cao cấp tại Vườn quốc gia Núi Chúa dưới góc độ marketing xanh bền vững."
     }
   ];
 
@@ -54,63 +50,11 @@ const App = () => {
     setActiveTab((prev) => (prev === destinations.length - 1 ? 0 : prev + 1));
   }, [destinations.length]);
 
-  const handlePrev = useCallback(() => {
-    setActiveTab((prev) => (prev === 0 ? destinations.length - 1 : prev - 1));
-  }, [destinations.length]);
-
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(handleNext, 5000);
     return () => clearInterval(timer);
   }, [handleNext, isPaused]);
-
-  // Gemini API Integration
-  const generateAiInsight = async () => {
-    setIsPaused(true);
-    setIsGenerating(true);
-    setAiResponse("");
-    setShowAiModal(true);
-
-    const apiKey = ""; // Nhớ điền API Key của bạn vào đây hoặc dùng process.env
-    const model = "gemini-2.0-flash"; // Cập nhật model mới nhất để hoạt động ổn định
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    
-    const userPrompt = destinations[activeTab].prompt;
-    const systemPrompt = "Bạn là một chuyên gia về Green Marketing và Du lịch sinh thái tại Việt Nam. Hãy viết một bản phân tích ngắn gọn, chuyên nghiệp và có chiều sâu bằng tiếng Việt.";
-
-    const fetchWithRetry = async (retries = 5, delay = 1000) => {
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: userPrompt }] }],
-            systemInstruction: { parts: [{ text: systemPrompt }] }
-          })
-        });
-
-        if (!response.ok) throw new Error('API call failed');
-        
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-      } catch (error) {
-        if (retries > 0) {
-          await new Promise(resolve => setTimeout(resolve, delay));
-          return fetchWithRetry(retries - 1, delay * 2);
-        }
-        throw error;
-      }
-    };
-
-    try {
-      const result = await fetchWithRetry();
-      setAiResponse(result);
-    } catch (error) {
-      setAiResponse("Rất tiếc, đã có lỗi xảy ra trong quá trình kết nối với trợ lý AI. Vui lòng thử lại sau.");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const getCardStyle = (index) => {
     const total = destinations.length;
@@ -196,11 +140,11 @@ const App = () => {
           />
         </div>
       </nav>
+
       {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
           
-          {/* Nút Đóng (Góc trên phải) */}
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
             className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
@@ -208,7 +152,6 @@ const App = () => {
             <X size={32} strokeWidth={1.5} />
           </button>
           
-          {/* Danh sách Links */}
           <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
             <li>
               <Link 
@@ -220,7 +163,6 @@ const App = () => {
               </Link>
             </li>
             
-            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
             <li>
               <Link 
                 href="/destinations" 
@@ -250,11 +192,10 @@ const App = () => {
                 Liên hệ
               </Link>
             </li>
-            
-            {/* Nút Khảo sát */}
           </ul>
         </div>
       )}
+
       {/* Main Content */}
       <main className="relative z-40 flex flex-col items-center justify-center flex-1 w-full pt-8 pb-12 px-4">
         
@@ -290,15 +231,13 @@ const App = () => {
           
           <div className="flex items-center gap-4 animate-fade-in">
             <a 
-              href="https://forms.gle/7ZdmfWrk4ksA6vXC9" // <--- THAY LINK GOOGLE FORM CỦA BẠN VÀO ĐÂY
+              href="https://forms.gle/7ZdmfWrk4ksA6vXC9" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-poppins text-center"
+              className="relative z-50 px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-poppins text-center"
             >
               Khảo sát ngay
             </a>
-
-            
           </div>
         </div>
 
@@ -306,13 +245,20 @@ const App = () => {
         <div 
           className="relative w-full max-w-4xl h-[260px] flex items-center justify-center perspective-1000"
           onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => !showAiModal && setIsPaused(false)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           {destinations.map((dest, index) => (
             <div 
               key={dest.id}
-              onClick={() => setActiveTab(index)}
-              className={`absolute w-[280px] md:w-[440px] h-[160px] md:h-[230px] cursor-pointer transition-all duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] rounded-[2.5rem] overflow-hidden shadow-2xl
+              onClick={() => {
+                // LOGIC CHUYỂN TRANG NẰM Ở ĐÂY
+                if (activeTab === index) {
+                  router.push(`/destinations?expand=${dest.id}`);
+                } else {
+                  setActiveTab(index);
+                }
+              }}
+              className={`absolute group w-[280px] md:w-[440px] h-[160px] md:h-[230px] cursor-pointer transition-all duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] rounded-[2.5rem] overflow-hidden shadow-2xl
                 ${getCardStyle(index)}
               `}
             >
@@ -320,12 +266,21 @@ const App = () => {
                 src={dest.image} 
                 alt={dest.name} 
                 className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms]
-                  ${activeTab === index ? 'scale-105' : 'scale-125'}
+                  ${activeTab === index ? 'scale-105 group-hover:scale-110' : 'scale-125'}
                 `} 
               />
-              <div className={`absolute inset-0 transition-opacity duration-1000 ${activeTab === index ? 'bg-gradient-to-t from-black/95 via-transparent to-transparent opacity-95' : 'bg-black/60'}`}></div>
+              <div className={`absolute inset-0 transition-opacity duration-1000 ${activeTab === index ? 'bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-95 group-hover:bg-black/40' : 'bg-black/60'}`}></div>
               
-              <div className={`absolute inset-0 p-8 flex flex-col justify-end transition-all duration-700 delay-200
+              {/* Nút báo hiệu bấm để chuyển trang (Chỉ hiện khi di chuột vào ảnh giữa) */}
+              {activeTab === index && (
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                   <div className="bg-emerald-500/80 backdrop-blur-md px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-white flex items-center gap-2">
+                     Xem chi tiết <ArrowUpRight size={14} />
+                   </div>
+                </div>
+              )}
+
+              <div className={`absolute inset-0 p-8 flex flex-col justify-end transition-all duration-700 delay-200 pointer-events-none
                 ${activeTab === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               >
                 <p className="uppercase tracking-[0.3em] text-emerald-400 text-[7.5px] font-black mb-1.5 font-poppins">
@@ -335,12 +290,11 @@ const App = () => {
                   <h3 className="font-bold uppercase tracking-tighter text-xl md:text-2xl leading-none drop-shadow-lg">
                     {dest.name}
                   </h3>
-                  
                 </div>
               </div>
 
               {activeTab === index && !isPaused && (
-                <div className="absolute bottom-0 left-0 w-full h-1.5 bg-white/5">
+                <div className="absolute bottom-0 left-0 w-full h-1.5 bg-white/5 pointer-events-none">
                   <div className="h-full bg-emerald-500 animate-progress origin-left"></div>
                 </div>
               )}
@@ -349,68 +303,10 @@ const App = () => {
         </div>
       </main>
 
-      {/* AI Response Modal */}
-      {showAiModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-xl bg-zinc-900 border border-emerald-500/20 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
-            <div className="p-5 border-b border-white/5 flex items-center justify-between bg-emerald-500/10">
-              <div className="flex items-center gap-2.5">
-                <div className="p-1.5 bg-emerald-500 rounded-lg">
-                  <Sparkles size={16} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-bold uppercase text-[11px] tracking-widest font-poppins">Trợ lý Chiến lược AI ✨</h3>
-                  <p className="text-[8px] opacity-60 uppercase font-bold tracking-tighter font-poppins">Đang phân tích: {destinations[activeTab].name}</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => { setShowAiModal(false); setIsPaused(false); }}
-                className="p-1.5 hover:bg-white/5 rounded-full transition-colors"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            
-            <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
-              {isGenerating ? (
-                <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <Loader2 size={32} className="text-emerald-500 animate-spin" />
-                  <p className="text-[9px] uppercase tracking-widest font-bold opacity-60 animate-pulse font-poppins">Đang tổng hợp dữ liệu...</p>
-                </div>
-              ) : (
-                <div className="prose prose-invert prose-emerald max-w-none">
-                  <div className="flex items-start gap-3 mb-5 p-3.5 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
-                    <span className="shrink-0 mt-0.5"><Info size={16} className="text-emerald-500" /></span>
-                    <p className="text-[11px] italic opacity-80 leading-relaxed font-poppins">
-                      Thông tin dưới đây được tạo tự động bởi trí tuệ nhân tạo dựa trên các dữ liệu về marketing xanh và du lịch sinh thái.
-                    </p>
-                  </div>
-                  <div className="text-[13px] md:text-[14px] leading-relaxed opacity-90 whitespace-pre-wrap font-light">
-                    {aiResponse}
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="p-5 border-t border-white/5 bg-zinc-950 flex justify-end">
-              <button 
-                onClick={() => { setShowAiModal(false); setIsPaused(false); }}
-                className="px-5 py-2 bg-white text-black font-bold uppercase text-[9px] tracking-widest rounded-full hover:bg-emerald-500 hover:text-white transition-all shadow-md active:scale-95 font-poppins"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <style dangerouslySetInnerHTML={{ __html: `
-        
         .font-poppins {
-          /* SỬA THÀNH DÒNG NÀY ĐỂ NHẬN FONT TỪ LAYOUT */
           font-family: var(--font-poppins), sans-serif;
         }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
         @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -419,11 +315,6 @@ const App = () => {
         .animate-progress { animation: progress 5s linear forwards; }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         .perspective-1000 { perspective: 1000px; }
-        .custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(16, 185, 129, 0.2) transparent; }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
       `}} />
     </div>
   );

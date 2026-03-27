@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap, X } from 'lucide-react';
 import Link from 'next/link';
-
+import { useSearchParams } from 'next/navigation';  
 const DestinationsPage = () => {
   // State quản lý việc mở rộng nội dung của từng địa điểm
   const [expandedId, setExpandedId] = useState(null);
@@ -10,8 +10,24 @@ const DestinationsPage = () => {
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
   };
-
+  const searchParams = useSearchParams();
   // Dữ liệu chi tiết nạp từ tài liệu nghiên cứu
+  const expandParam = searchParams.get('expand');
+
+  useEffect(() => {
+    if (expandParam !== null) {
+      const idToExpand = parseInt(expandParam, 10);
+      setExpandedId(idToExpand);
+      
+      // Đợi nửa giây cho trang load xong rồi trượt màn hình xuống đúng cái ô đó
+      setTimeout(() => {
+        const element = document.getElementById(`destination-${idToExpand}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
+    }
+  }, [expandParam]);
   const destinationsData = [
     {
       id: 0,
@@ -200,7 +216,11 @@ const DestinationsPage = () => {
         {/* Destinations List */}
         <div className="space-y-40">
           {destinationsData.map((dest) => (
-            <div key={dest.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+              <div 
+                key={dest.id} 
+                id={`destination-${dest.id}`}  // <-- THÊM DÒNG NÀY ĐỂ ĐỊNH VỊ
+                className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start scroll-mt-24" // THÊM scroll-mt-24 để nó không bị dính sát mép trên
+              >
               
               {/* Left Column: Image Gallery */}
               <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-4">

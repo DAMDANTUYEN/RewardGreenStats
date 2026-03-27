@@ -236,7 +236,7 @@ const App = () => {
                   </div>
                   <div>
                     <p className="text-xl lg:text-[13px] font-black uppercase tracking-wider text-white italic">{item.name}</p>
-                    <span className="text-[10px] lg:text-[7.5px] font-bold text-emerald-500/70 uppercase">Cơ hội trúng thưởng cao</span>
+                    <span className="text-[10px] lg:text-[7.5px] font-bold text-emerald-500/70 uppercase">Vẫn còn phần quà</span>
                   </div>
                 </div>
               ))}

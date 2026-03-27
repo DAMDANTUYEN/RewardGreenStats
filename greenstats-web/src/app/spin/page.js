@@ -14,7 +14,7 @@ const App = () => {
   const [winner, setWinner] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [spinsLeft, setSpinsLeft] = useState(0); 
-
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // --- CẤU HÌNH LOGO THẬT ---
   const brandLogos = {
     chatgpt: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
@@ -187,7 +187,11 @@ const App = () => {
           ) : (
             <button onClick={handleLogin} className="px-6 py-2 bg-emerald-500 text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:scale-105 transition-all">Đăng nhập</button>
           )}
-          <Menu className="lg:hidden text-white" />
+                    <Menu 
+              size={18} 
+              className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
+              onClick={() => setIsMobileMenuOpen(true)} 
+            />
         </div>
       </nav>
       {isMobileMenuOpen && (

@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
-import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap } from 'lucide-react';
+import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap, X } from 'lucide-react';
 import Link from 'next/link';
 
 const DestinationsPage = () => {
   // State quản lý việc mở rộng nội dung của từng địa điểm
   const [expandedId, setExpandedId] = useState(null);
-
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
   };
@@ -120,7 +120,12 @@ const DestinationsPage = () => {
         <div className="flex items-center gap-5">
           <Search size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
           <User size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <Menu size={18} className="lg:hidden" />
+          {/* Sửa lại dòng này */}
+            <Menu 
+              size={18} 
+              className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
+              onClick={() => setIsMobileMenuOpen(true)} 
+            />
         </div>
       </nav>
       {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}

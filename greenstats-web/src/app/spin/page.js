@@ -217,7 +217,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Main Content - ĐÃ ĐƯỢC THU NHỎ KÍCH THƯỚC TRÊN PC */}
+      {/* Main Content */}
       <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-6">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-12 xl:gap-16 w-full max-w-screen-xl">
           
@@ -303,27 +303,27 @@ const App = () => {
         </div>
       </main>
 
-      {/* MODAL KẾT QUẢ */}
+      {/* MODAL KẾT QUẢ - ĐÃ ĐƯỢC THU NHỎ TRÊN CẢ MOBILE VÀ PC */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/98 backdrop-blur-3xl animate-fade-in">
-          <div className="relative w-full max-w-xl bg-zinc-900 border border-white/10 rounded-[4rem] p-16 text-center shadow-2xl">
-            <button onClick={() => setShowModal(false)} className="absolute top-10 right-10 text-white/20 hover:text-white"><X size={32} /></button>
-            <div className="mb-12">
-              <div className={`w-32 h-32 mx-auto rounded-[2.5rem] flex items-center justify-center shadow-2xl ${winner?.isWin ? 'bg-emerald-500 shadow-[0_0_50px_#10b981]' : 'bg-white/10'}`}>
-                <Trophy size={64} className={winner?.isWin ? 'text-black' : 'text-white/20'} />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/98 backdrop-blur-3xl animate-fade-in">
+          <div className="relative w-full max-w-md bg-zinc-900 border border-white/10 rounded-[3rem] p-8 sm:p-10 text-center shadow-2xl">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-white/20 hover:text-white transition-colors"><X size={24} /></button>
+            <div className="mb-6 sm:mb-8">
+              <div className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center shadow-2xl ${winner?.isWin ? 'bg-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.5)]' : 'bg-white/10'}`}>
+                <Trophy size={40} className={winner?.isWin ? 'text-black' : 'text-white/20'} />
               </div>
             </div>
-            <h3 className="text-5xl font-black uppercase tracking-tighter mb-10 italic text-white">{winner?.isWin ? 'CHÚC MỪNG!' : 'TIẾC QUÁ...'}</h3>
-            <div className="p-12 bg-black/50 border border-white/5 rounded-[3.5rem] mb-10 shadow-inner">
-              <p className="text-2xl font-bold text-emerald-400 leading-relaxed uppercase tracking-widest italic">{winner?.text}</p>
+            <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter mb-6 italic text-white">{winner?.isWin ? 'CHÚC MỪNG!' : 'TIẾC QUÁ...'}</h3>
+            <div className="p-6 sm:p-8 bg-black/50 border border-white/5 rounded-[2rem] mb-6 sm:mb-8 shadow-inner">
+              <p className="text-lg sm:text-xl font-bold text-emerald-400 leading-relaxed uppercase tracking-widest italic">{winner?.text}</p>
             </div>
             {winner?.isWin && (
-              <div className="bg-emerald-500/10 p-8 rounded-[2.5rem] border border-emerald-500/20 mb-12 text-left animate-scale-up">
-                <p className="text-sm font-black uppercase text-emerald-400 mb-4 flex items-center gap-3"><Phone size={18}/> Liên hệ Admin Zalo/SĐT:</p>
-                <p className="text-2xl font-black text-white italic">0123.456.789</p>
+              <div className="bg-emerald-500/10 p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-emerald-500/20 mb-6 sm:mb-8 text-left animate-scale-up">
+                <p className="text-xs sm:text-sm font-black uppercase text-emerald-400 mb-2 sm:mb-3 flex items-center gap-2"><Phone size={16}/> Liên hệ Admin Zalo/SĐT:</p>
+                <p className="text-xl sm:text-2xl font-black text-white italic">0123.456.789</p>
               </div>
             )}
-            <button onClick={() => setShowModal(false)} className="w-full py-6 bg-white text-black font-black uppercase text-lg tracking-[0.4em] rounded-full hover:bg-emerald-400 transition-all">XÁC NHẬN</button>
+            <button onClick={() => setShowModal(false)} className="w-full py-4 sm:py-5 bg-white text-black font-black uppercase text-sm sm:text-base tracking-[0.3em] sm:tracking-[0.4em] rounded-full hover:bg-emerald-400 transition-all">XÁC NHẬN</button>
           </div>
         </div>
       )}

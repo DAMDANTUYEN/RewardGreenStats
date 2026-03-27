@@ -86,48 +86,36 @@ const App = () => {
       let finalRotation;
 
       if (data.prizeName.toLowerCase().includes('spotify')) {
-        // --- TRÚNG THƯỞNG SPOTIFY THẬT ---
-        const targetIndex = 2; // Ô Spotify
+        const targetIndex = 2; 
         const sliceAngle = 36;
-        // Rơi an toàn vào giữa ô Spotify (từ 5 đến 31 độ của ô)
         const randomOffsetWithinSlice = 5 + Math.random() * 26; 
         const targetWheelAngle = (targetIndex * sliceAngle) + randomOffsetWithinSlice;
         
         const currentExtraDegrees = rotation % 360; 
         const neededRotation = (360 - targetWheelAngle) - currentExtraDegrees;
         const normalizedNeeded = (neededRotation + 360) % 360;
-        finalRotation = rotation + normalizedNeeded + (360 * 10); // Quay 10 vòng
+        finalRotation = rotation + normalizedNeeded + (360 * 10);
       } else {
-        // --- KỊCH BẢN TRƯỢT: TRÊU NGƯỜI CHƠI (TẢN ĐỀU MỌI Ô) ---
-        // Chọn ngẫu nhiên 1 trong 5 giải lớn làm "mồi nhử" (0: ChatGPT, 2: Spotify, 4: YT, 6: Netflix, 8: Canva)
         const premiumIndices = [0, 2, 4, 6, 8];
         const teaseIndex = premiumIndices[Math.floor(Math.random() * premiumIndices.length)];
-
-        // Tỉ lệ 50-50: Chớm chưa chạm tới ô giải thưởng HOẶC Vừa lố đà trượt qua ô giải thưởng
         const stopBefore = Math.random() > 0.5; 
-
-        // Khoảng cách siêu sát vách: Từ 1.0 đến 3.0 độ
         const edgeDistance = 1.0 + Math.random() * 2.0;
 
         let targetWheelAngle;
         if (stopBefore) {
-          // Dừng chớm ngay trước vách ô giải thưởng (Kim nằm ở ô Sống Xanh phía trước)
           targetWheelAngle = (teaseIndex * 36) - edgeDistance;
         } else {
-          // Trượt lố lọt ra khỏi ô giải thưởng (Kim lọt sang ô Sống Xanh phía sau)
           targetWheelAngle = ((teaseIndex + 1) * 36) + edgeDistance;
         }
 
-        // Ép góc về chuẩn 0-360 độ
         if (targetWheelAngle < 0) targetWheelAngle += 360;
         targetWheelAngle = targetWheelAngle % 360;
 
-        // Tính góc xoay mượt mà chống giật
         const currentExtraDegrees = rotation % 360; 
         const neededRotation = (360 - targetWheelAngle) - currentExtraDegrees;
         const normalizedNeeded = (neededRotation + 360) % 360; 
         
-        finalRotation = rotation + normalizedNeeded + (360 * 10); // Quay 10 vòng kịch tính
+        finalRotation = rotation + normalizedNeeded + (360 * 10); 
       }
 
       setRotation(finalRotation);
@@ -158,10 +146,10 @@ const App = () => {
       </div>
 
       {/* NAVBAR NÂNG CẤP */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 backdrop-blur-xl border-b border-white/5">
+      <nav className="relative z-50 flex items-center justify-between px-6 py-5 md:px-16 md:py-6 backdrop-blur-xl border-b border-white/5">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="p-1.5 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/40 transition-all"><Zap size={24} className="text-emerald-400" /></div>
-          <div className="font-black uppercase tracking-tighter text-2xl italic">Green<span className="text-emerald-400">Stats</span></div>
+          <div className="p-1 md:p-1.5 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/40 transition-all"><Zap size={20} className="md:w-[24px] md:h-[24px] text-emerald-400" /></div>
+          <div className="font-black uppercase tracking-tighter text-xl md:text-2xl italic">Green<span className="text-emerald-400">Stats</span></div>
         </Link>
 
         {/* Menu giữa */}
@@ -181,23 +169,25 @@ const App = () => {
         </ul>
 
         {/* Auth Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           {user ? (
-            <div className="flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full border border-white/10 shadow-xl">
-              <span className="text-xs font-black text-emerald-400 uppercase hidden sm:block">{spinsLeft} Lượt Quay</span>
-              <div className="w-8 h-8 rounded-full border border-emerald-500/30 overflow-hidden">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/5 px-3 py-1.5 md:px-4 rounded-full border border-white/10 shadow-xl">
+              {/* ĐÃ SỬA CHỖ NÀY: Bỏ class hidden sm:block để luôn hiện trên mobile */}
+              <span className="text-[10px] md:text-xs font-black text-emerald-400 uppercase whitespace-nowrap">{spinsLeft} Lượt</span>
+              
+              <div className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-emerald-500/30 overflow-hidden shrink-0">
                 <img src={user.user_metadata?.avatar_url} className="w-full h-full object-cover" alt="avatar" />
               </div>
-              <button onClick={handleLogout} className="p-1.5 hover:text-red-500 transition-colors" title="Đăng xuất">
-                <LogOut size={16} />
+              <button onClick={handleLogout} className="p-1 md:p-1.5 hover:text-red-500 transition-colors" title="Đăng xuất">
+                <LogOut size={14} className="md:w-[16px] md:h-[16px]" />
               </button>
             </div>
           ) : (
-            <button onClick={handleLogin} className="px-6 py-2 bg-emerald-500 text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:scale-105 transition-all">Đăng nhập</button>
+            <button onClick={handleLogin} className="px-5 py-2 md:px-6 bg-emerald-500 text-black font-black uppercase text-[9px] md:text-[10px] tracking-widest rounded-full hover:scale-105 transition-all whitespace-nowrap">Đăng nhập</button>
           )}
           <Menu 
-            size={18} 
-            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
+            size={20} 
+            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors ml-1" 
             onClick={() => setIsMobileMenuOpen(true)} 
           />
         </div>
@@ -231,7 +221,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Main Content - ĐÃ ĐƯỢC THU NHỎ KÍCH THƯỚC TRÊN PC */}
+      {/* Main Content */}
       <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-6">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-12 xl:gap-16 w-full max-w-screen-xl">
           
@@ -317,27 +307,34 @@ const App = () => {
         </div>
       </main>
 
-      {/* MODAL KẾT QUẢ - ĐÃ ĐƯỢC THU NHỎ TRÊN CẢ MOBILE VÀ PC */}
+      {/* MODAL KẾT QUẢ - TRONG SUỐT VÀ KÍNH MỜ */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/98 backdrop-blur-3xl animate-fade-in">
-          <div className="relative w-full max-w-md bg-zinc-900 border border-white/10 rounded-[3rem] p-8 sm:p-10 text-center shadow-2xl">
-            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-white/20 hover:text-white transition-colors"><X size={24} /></button>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-md bg-black/60 border border-white/10 backdrop-blur-2xl rounded-[3rem] p-8 sm:p-10 text-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"><X size={24} strokeWidth={2} /></button>
+            
             <div className="mb-6 sm:mb-8">
-              <div className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center shadow-2xl ${winner?.isWin ? 'bg-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.5)]' : 'bg-white/10'}`}>
-                <Trophy size={40} className={winner?.isWin ? 'text-black' : 'text-white/20'} />
+              <div className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center shadow-2xl transition-all ${winner?.isWin ? 'bg-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.5)]' : 'bg-white/10'}`}>
+                <Trophy size={40} className={winner?.isWin ? 'text-black' : 'text-white/30'} />
               </div>
             </div>
-            <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter mb-6 italic text-white">{winner?.isWin ? 'CHÚC MỪNG!' : 'TIẾC QUÁ...'}</h3>
-            <div className="p-6 sm:p-8 bg-black/50 border border-white/5 rounded-[2rem] mb-6 sm:mb-8 shadow-inner">
+            
+            <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter mb-6 italic text-white drop-shadow-md">
+              {winner?.isWin ? 'CHÚC MỪNG!' : 'TIẾC QUÁ...'}
+            </h3>
+            
+            <div className="p-6 sm:p-8 bg-black/30 border border-white/5 rounded-[2rem] mb-6 sm:mb-8 shadow-inner">
               <p className="text-lg sm:text-xl font-bold text-emerald-400 leading-relaxed uppercase tracking-widest italic">{winner?.text}</p>
             </div>
+            
             {winner?.isWin && (
               <div className="bg-emerald-500/10 p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-emerald-500/20 mb-6 sm:mb-8 text-left animate-scale-up">
                 <p className="text-xs sm:text-sm font-black uppercase text-emerald-400 mb-2 sm:mb-3 flex items-center gap-2"><Phone size={16}/> Liên hệ Admin Zalo/SĐT:</p>
                 <p className="text-xl sm:text-2xl font-black text-white italic">0123.456.789</p>
               </div>
             )}
-            <button onClick={() => setShowModal(false)} className="w-full py-4 sm:py-5 bg-white text-black font-black uppercase text-sm sm:text-base tracking-[0.3em] sm:tracking-[0.4em] rounded-full hover:bg-emerald-400 transition-all">XÁC NHẬN</button>
+            
+            <button onClick={() => setShowModal(false)} className="w-full py-4 sm:py-5 bg-white/90 hover:bg-emerald-400 text-black font-black uppercase text-sm sm:text-base tracking-[0.3em] sm:tracking-[0.4em] rounded-full transition-all shadow-lg">XÁC NHẬN</button>
           </div>
         </div>
       )}
@@ -348,8 +345,8 @@ const App = () => {
         * { font-family: 'Times New Roman', Times, serif !important; }
         .font-poppins { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important; }
         body { background: #000; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes scaleUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         .animate-scale-up { animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
       `}} />

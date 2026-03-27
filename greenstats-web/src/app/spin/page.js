@@ -15,6 +15,7 @@ const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [spinsLeft, setSpinsLeft] = useState(0); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   // --- CẤU HÌNH LOGO THẬT ---
   const brandLogos = {
     chatgpt: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
@@ -151,26 +152,19 @@ const App = () => {
 
         {/* Menu giữa */}
         <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
-  {/* Đã thêm Link và italic, bỏ gạch chân */}
-  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
-    <Link href="/">Giới thiệu</Link>
-  </li>
-  
-  {/* Đã thêm italic và mang gạch chân xuống đây vì đang ở trang Điểm Đến */}
-  <li className="hover:text-emerald-400 cursor-pointer transition-colors ">
-    <Link href="/destinations">ĐIỂM ĐẾN</Link>
-  </li>
-  
-  {/* Đã thêm italic */}
-  <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">
-    <Link href="/spin">Vòng quay</Link>
-  </li>
-  
-  {/* Đã thêm italic */}
-  <li className="hover:text-emerald-400 cursor-pointer transition-colors">
-    <Link href="/contact">Liên hệ</Link>
-  </li>
-</ul>
+          <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+            <Link href="/">Giới thiệu</Link>
+          </li>
+          <li className="hover:text-emerald-400 cursor-pointer transition-colors ">
+            <Link href="/destinations">ĐIỂM ĐẾN</Link>
+          </li>
+          <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">
+            <Link href="/spin">Vòng quay</Link>
+          </li>
+          <li className="hover:text-emerald-400 cursor-pointer transition-colors">
+            <Link href="/contact">Liên hệ</Link>
+          </li>
+        </ul>
 
         {/* Auth Section */}
         <div className="flex items-center gap-4">
@@ -187,17 +181,18 @@ const App = () => {
           ) : (
             <button onClick={handleLogin} className="px-6 py-2 bg-emerald-500 text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:scale-105 transition-all">Đăng nhập</button>
           )}
-                    <Menu 
-              size={18} 
-              className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
-              onClick={() => setIsMobileMenuOpen(true)} 
-            />
+          <Menu 
+            size={18} 
+            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
+            onClick={() => setIsMobileMenuOpen(true)} 
+          />
         </div>
       </nav>
+
+      {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
           
-          {/* Nút Đóng (Góc trên phải) */}
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
             className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
@@ -205,67 +200,39 @@ const App = () => {
             <X size={32} strokeWidth={1.5} />
           </button>
           
-          {/* Danh sách Links */}
           <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
             <li>
-              <Link 
-                href="/" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                Giới thiệu
-              </Link>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">Giới thiệu</Link>
             </li>
-            
-            {/* TRANG HIỆN TẠI: ĐIỂM ĐẾN (CÓ GẠCH CHÂN) */}
             <li>
-              <Link 
-                href="/destinations" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                ĐIỂM ĐẾN
-              </Link>
+              <Link href="/destinations" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">ĐIỂM ĐẾN</Link>
             </li>
-            
             <li>
-              <Link 
-                href="/spin" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md"
-              >
-                Vòng quay
-              </Link>
+              <Link href="/spin" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md">Vòng quay</Link>
             </li>
-            
             <li>
-              <Link 
-                href="/contact" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                Liên hệ
-              </Link>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">Liên hệ</Link>
             </li>
-            
           </ul>
         </div>
       )}
-      <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-8">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24 xl:gap-40 w-full max-w-screen-2xl">
+
+      {/* Main Content - ĐÃ ĐƯỢC THU NHỎ KÍCH THƯỚC TRÊN PC */}
+      <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-6">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-12 xl:gap-16 w-full max-w-screen-xl">
           
           {/* --- BẢNG DANH SÁCH CHI TIẾT --- */}
-          <div className={`order-2 lg:order-1 flex flex-col gap-5 w-full lg:w-[420px] transition-all ${isSpinning ? 'opacity-20' : 'opacity-100'}`}>
-            <h3 className="text-xl font-black uppercase tracking-[0.5em] text-emerald-500 mb-2 border-l-4 border-emerald-500 pl-4">KHO QUÀ TẶNG</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+          <div className={`order-2 lg:order-1 flex flex-col gap-5 lg:gap-3 w-full lg:w-[300px] xl:w-[320px] transition-all ${isSpinning ? 'opacity-20' : 'opacity-100'}`}>
+            <h3 className="text-xl lg:text-sm font-black uppercase tracking-[0.5em] text-emerald-500 mb-2 lg:mb-1 border-l-4 lg:border-l-[3px] border-emerald-500 pl-4 lg:pl-3">KHO QUÀ TẶNG</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-2.5">
               {wheelSlices.filter(s => s.name !== 'Sống Xanh').map((item, idx) => (
-                <div key={idx} className="group bg-white/[0.04] border border-white/10 p-6 rounded-[2.5rem] flex items-center gap-6 hover:bg-white/[0.08] hover:border-emerald-500/40 transition-all shadow-2xl">
-                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-3">
+                <div key={idx} className="group bg-white/[0.04] border border-white/10 p-6 lg:p-3 lg:px-5 rounded-[2.5rem] lg:rounded-2xl flex items-center gap-6 lg:gap-4 hover:bg-white/[0.08] hover:border-emerald-500/40 transition-all shadow-2xl">
+                  <div className="w-16 h-16 lg:w-11 lg:h-11 bg-white rounded-2xl lg:rounded-[0.8rem] flex items-center justify-center p-3 lg:p-2">
                     <img src={item.logo} alt={item.name} className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <p className="text-xl font-black uppercase tracking-wider text-white italic">{item.name}</p>
-                    <span className="text-[10px] font-bold text-emerald-500/70 uppercase">Cơ hội trúng thưởng cao</span>
+                    <p className="text-xl lg:text-[13px] font-black uppercase tracking-wider text-white italic">{item.name}</p>
+                    <span className="text-[10px] lg:text-[7.5px] font-bold text-emerald-500/70 uppercase">Cơ hội trúng thưởng cao</span>
                   </div>
                 </div>
               ))}
@@ -274,12 +241,11 @@ const App = () => {
 
           {/* --- TRUNG TÂM: VÒNG QUAY LOGO --- */}
           <div className="order-1 lg:order-2 relative flex flex-col items-center">
-            <div className="relative w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] flex items-center justify-center">
+            <div className="relative w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] lg:w-[480px] lg:h-[480px] xl:w-[520px] xl:h-[520px] flex items-center justify-center">
               <div 
-                className="relative w-full h-full rounded-full border-[15px] lg:border-[25px] border-white/5 bg-black/40 backdrop-blur-2xl shadow-[0_0_150px_rgba(16,185,129,0.2)]" 
+                className="relative w-full h-full rounded-full border-[15px] lg:border-[16px] border-white/5 bg-black/40 backdrop-blur-2xl shadow-[0_0_150px_rgba(16,185,129,0.2)]" 
                 style={{ 
                   transform: `rotate(${rotation}deg)`, 
-                  // Thời gian quay đúng 3.9 giây với hiệu ứng chậm dần đều cực mượt
                   transition: isSpinning ? 'transform 7.9s cubic-bezier(0.15, 0, 0.15, 1)' : 'none' 
                 }}
               >
@@ -290,7 +256,6 @@ const App = () => {
                       <g key={i} transform={`rotate(${i * angle} 50 50)`}>
                         <path d={`M50 50 L50 0 A50 50 0 0 1 ${50 + 50 * Math.sin((angle * Math.PI) / 180)} ${50 - 50 * Math.cos((angle * Math.PI) / 180)} Z`} fill={slice.color} stroke="rgba(255,255,255,0.08)" strokeWidth="0.1" />
                         <g transform={`rotate(${angle / 2} 50 50)`}>
-                          {/* Logo to đối xứng (x=38, width=24) */}
                           <foreignObject x="39" y="10" width="16" height="16" transform="rotate(90, 50, 18)">
                             <div className="w-full h-full flex items-center justify-center">
                               <img src={slice.logo} className="w-full h-full object-contain" alt="logo" />
@@ -301,22 +266,22 @@ const App = () => {
                     );
                   })}
                 </svg>
-                <div className="absolute inset-0 m-auto w-24 h-24 bg-zinc-900 rounded-full border-4 border-emerald-500 shadow-[0_0_60px_rgba(16,185,129,0.8)] flex items-center justify-center font-black italic text-4xl text-emerald-400 z-30">GS</div>
+                <div className="absolute inset-0 m-auto w-24 h-24 lg:w-16 lg:h-16 bg-zinc-900 rounded-full border-4 lg:border-2 border-emerald-500 shadow-[0_0_60px_rgba(16,185,129,0.8)] flex items-center justify-center font-black italic text-4xl lg:text-2xl text-emerald-400 z-30">GS</div>
               </div>
-              <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-                <svg width="70" height="90" viewBox="0 0 40 50"><path d="M20 50L5 15C5 8 10 0 20 0C30 0 35 8 35 15L20 50Z" fill="#10b981" /></svg>
+              <div className="absolute -top-12 lg:-top-8 left-1/2 -translate-x-1/2 z-50 w-[70px] lg:w-[48px]">
+                <svg viewBox="0 0 40 50" className="w-full h-full drop-shadow-xl"><path d="M20 50L5 15C5 8 10 0 20 0C30 0 35 8 35 15L20 50Z" fill="#10b981" /></svg>
               </div>
             </div>
 
-            <div className="mt-16 scale-125 md:scale-[1.7] transition-transform">
+            <div className="mt-16 lg:mt-8 scale-125 md:scale-[1.7] lg:scale-100 xl:scale-110 transition-transform">
                {loading ? <Loader2 className="animate-spin text-emerald-500" /> : (
                  !user ? (
-                   <button onClick={handleLogin} className="px-16 py-4 bg-emerald-500 text-black font-black uppercase text-sm rounded-full tracking-widest shadow-2xl">UNLOCK NOW</button>
+                   <button onClick={handleLogin} className="px-16 lg:px-12 py-4 lg:py-3 bg-emerald-500 text-black font-black uppercase text-sm lg:text-[10px] rounded-full tracking-widest shadow-2xl">UNLOCK NOW</button>
                  ) : (
                    <button 
                     onClick={spinWheel} 
                     disabled={isSpinning || spinsLeft <= 0} 
-                    className={`px-16 py-4 rounded-full font-black uppercase text-[12px] tracking-[0.4em] transition-all duration-500 shadow-2xl ${isSpinning || spinsLeft <= 0 ? 'bg-white/5 text-white/20' : 'bg-emerald-500 text-black hover:shadow-[0_0_50px_#10b981]'}`}
+                    className={`px-16 lg:px-12 py-4 lg:py-3 rounded-full font-black uppercase text-[12px] lg:text-[10px] tracking-[0.4em] transition-all duration-500 shadow-2xl ${isSpinning || spinsLeft <= 0 ? 'bg-white/5 text-white/20' : 'bg-emerald-500 text-black hover:shadow-[0_0_50px_#10b981]'}`}
                    >
                      {isSpinning ? 'SPINNING...' : spinsLeft > 0 ? 'QUAY NGAY' : 'HẾT LƯỢT'}
                    </button>
@@ -326,12 +291,12 @@ const App = () => {
           </div>
           
           {/* CỘT PHẢI: TRẠNG THÁI */}
-          <div className="hidden xl:flex flex-col gap-6 w-64 order-3">
-             <div className="bg-white/[0.02] border border-white/10 p-8 rounded-[3rem] backdrop-blur-xl shadow-2xl text-center">
-                <p className="text-[11px] font-black uppercase text-emerald-500 mb-6 tracking-widest">SYSTEM DATA</p>
-                <div className="flex flex-col gap-6 text-sm font-bold">
-                   <div className="flex justify-between items-center"><span className="text-white/30 uppercase">Secure</span><Shield size={18} className="text-emerald-500" /></div>
-                   <div className="flex justify-between items-center"><span className="text-white/30 uppercase">Live</span><div className="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div></div>
+          <div className="hidden xl:flex flex-col gap-6 lg:gap-4 w-64 lg:w-52 order-3">
+             <div className="bg-white/[0.02] border border-white/10 p-8 lg:p-6 rounded-[3rem] lg:rounded-[2rem] backdrop-blur-xl shadow-2xl text-center">
+                <p className="text-[11px] lg:text-[9px] font-black uppercase text-emerald-500 mb-6 lg:mb-4 tracking-widest">SYSTEM DATA</p>
+                <div className="flex flex-col gap-6 lg:gap-4 text-sm lg:text-xs font-bold">
+                   <div className="flex justify-between items-center"><span className="text-white/30 uppercase">Secure</span><Shield size={16} className="text-emerald-500" /></div>
+                   <div className="flex justify-between items-center"><span className="text-white/30 uppercase">Live</span><div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div></div>
                 </div>
              </div>
           </div>
@@ -367,6 +332,7 @@ const App = () => {
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
         * { font-family: 'Times New Roman', Times, serif !important; }
+        .font-poppins { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important; }
         body { background: #000; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

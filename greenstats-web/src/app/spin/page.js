@@ -57,10 +57,9 @@ const App = () => {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // LOGIC ĐĂNG XUẤT
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.reload(); // Tải lại trang để cập nhật trạng thái
+    window.location.reload(); 
   };
 
   const handleLogin = async () => {
@@ -84,46 +83,61 @@ const App = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      // 1. ÉP KIM QUAY (Tuyệt đối chặn Netflix/Canva/YouTube/ChatGPT)
-      let targetIndex;
+      let finalRotation;
+
       if (data.prizeName.toLowerCase().includes('spotify')) {
-        targetIndex = 2; // Chỉ dừng ở ô Spotify
+        // --- TRÚNG THƯỞNG SPOTIFY THẬT ---
+        const targetIndex = 2; // Ô Spotify
+        const sliceAngle = 36;
+        // Rơi an toàn vào giữa ô Spotify (từ 5 đến 31 độ của ô)
+        const randomOffsetWithinSlice = 5 + Math.random() * 26; 
+        const targetWheelAngle = (targetIndex * sliceAngle) + randomOffsetWithinSlice;
+        
+        const currentExtraDegrees = rotation % 360; 
+        const neededRotation = (360 - targetWheelAngle) - currentExtraDegrees;
+        const normalizedNeeded = (neededRotation + 360) % 360;
+        finalRotation = rotation + normalizedNeeded + (360 * 10); // Quay 10 vòng
       } else {
-        // Nếu trượt hoặc Backend báo trúng các giải mồi khác
-        // ÉP kim vào các ô Sống Xanh (Các Index lẻ: 1, 3, 5, 7, 9)
-        const ecoIndices = [1, 3, 5, 7, 9];
-        targetIndex = ecoIndices[Math.floor(Math.random() * ecoIndices.length)];
+        // --- KỊCH BẢN TRƯỢT: TRÊU NGƯỜI CHƠI (TẢN ĐỀU MỌI Ô) ---
+        // Chọn ngẫu nhiên 1 trong 5 giải lớn làm "mồi nhử" (0: ChatGPT, 2: Spotify, 4: YT, 6: Netflix, 8: Canva)
+        const premiumIndices = [0, 2, 4, 6, 8];
+        const teaseIndex = premiumIndices[Math.floor(Math.random() * premiumIndices.length)];
+
+        // Tỉ lệ 50-50: Chớm chưa chạm tới ô giải thưởng HOẶC Vừa lố đà trượt qua ô giải thưởng
+        const stopBefore = Math.random() > 0.5; 
+
+        // Khoảng cách siêu sát vách: Từ 1.0 đến 3.0 độ
+        const edgeDistance = 1.0 + Math.random() * 2.0;
+
+        let targetWheelAngle;
+        if (stopBefore) {
+          // Dừng chớm ngay trước vách ô giải thưởng (Kim nằm ở ô Sống Xanh phía trước)
+          targetWheelAngle = (teaseIndex * 36) - edgeDistance;
+        } else {
+          // Trượt lố lọt ra khỏi ô giải thưởng (Kim lọt sang ô Sống Xanh phía sau)
+          targetWheelAngle = ((teaseIndex + 1) * 36) + edgeDistance;
+        }
+
+        // Ép góc về chuẩn 0-360 độ
+        if (targetWheelAngle < 0) targetWheelAngle += 360;
+        targetWheelAngle = targetWheelAngle % 360;
+
+        // Tính góc xoay mượt mà chống giật
+        const currentExtraDegrees = rotation % 360; 
+        const neededRotation = (360 - targetWheelAngle) - currentExtraDegrees;
+        const normalizedNeeded = (neededRotation + 360) % 360; 
+        
+        finalRotation = rotation + normalizedNeeded + (360 * 10); // Quay 10 vòng kịch tính
       }
 
-      // 2. LOGIC RESET ẢO (Đưa math về 0 trước khi quay tiếp)
-      const sliceAngle = 36; 
-      const margin = -1.5;           // Lùi tối thiểu 1.5 độ từ vách ngăn
-      const jitter = -(Math.random() * 1.5); // Độ nhiễu âm (0 đến -1.5 độ) để dừng không trùng lặp
-
-      // 2. Random chọn mút: Đầu ô hoặc Cuối ô
-      // isNearStart = true: Kim vừa mới chớm vào ô
-      // isNearStart = false: Kim sắp chạy ra khỏi ô (sát vách ô tiếp theo)
-      const isNearStart = Math.random() > 0.5;
-
-      const ultraCloseOffset = isNearStart 
-        ? (margin + jitter)                         // Ví dụ: -1.5 đến -3.0 độ (Mút trên)
-        : (margin + jitter - (sliceAngle - 4));     // Ví dụ: -33.5 đến -35.0 độ (Mút dưới)
-
-      // 3. Áp dụng vào công thức Reset ảo (Chống lệch 100%)
-      const currentExtraDegrees = rotation % 360; 
-      const angleToTarget = (360 - (targetIndex * sliceAngle));
-      
-      // Công thức: Vị trí cũ + bù vòng tròn + tới ô trúng + lùi âm vào mút + 10 vòng quay
-      const finalRotation = rotation + (360 - currentExtraDegrees) + angleToTarget + ultraCloseOffset + (360 * 10);
-
       setRotation(finalRotation);
-      // 4. THỜI GIAN: Quay 3.9s + Nghỉ 1s = 4.9s hiện Modal
+
       setTimeout(() => {
         setIsSpinning(false);
         setSpinsLeft(data.spinsLeft);
         setWinner({ text: data.prizeName, isWin: data.type === 'REAL' });
         setShowModal(true);
-      }, 8.9 * 1000); // 8.9s để đảm bảo hết hẳn hiệu ứng quay và có thời gian nghỉ ngơi trước khi hiện modal
+      }, 8.9 * 1000);
 
     } catch (err) {
       setIsSpinning(false);
@@ -217,7 +231,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Main Content */}
+      {/* Main Content - ĐÃ ĐƯỢC THU NHỎ KÍCH THƯỚC TRÊN PC */}
       <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-6">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-12 xl:gap-16 w-full max-w-screen-xl">
           

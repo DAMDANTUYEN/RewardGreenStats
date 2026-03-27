@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap, X } from 'lucide-react';
+import React, { useState, useEffect,Suspense } from 'react';
+import { Search, User, Menu, MapPin, Leaf, Shield, Trees, Droplets, Sun, ChevronDown, ChevronUp, Compass, History, Zap, X,Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';  
-const DestinationsPage = () => {
+const DestinationsContent = () => {
   // State quản lý việc mở rộng nội dung của từng địa điểm
   const [expandedId, setExpandedId] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -323,6 +323,20 @@ const DestinationsPage = () => {
         .animate-fade-in { animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}} />
     </div>
+  );
+};
+
+const DestinationsPage = () => {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-screen w-full bg-zinc-950 flex items-center justify-center">
+          <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
+        </div>
+      }
+    >
+      <DestinationsContent />
+    </Suspense>
   );
 };
 

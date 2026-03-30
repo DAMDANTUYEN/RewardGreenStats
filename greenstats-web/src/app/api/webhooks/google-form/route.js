@@ -49,7 +49,7 @@ export async function POST(request) {
         .insert([{ 
           email: email, 
           display_name: name || 'Guest', 
-          spins_available: 1 
+          spins_available: 3 
         }]);
 
       if (insertError) throw insertError;

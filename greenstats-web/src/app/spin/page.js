@@ -330,7 +330,7 @@ const App = () => {
             {winner?.isWin && (
               <div className="bg-emerald-500/10 p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-emerald-500/20 mb-6 sm:mb-8 text-left animate-scale-up">
                 <p className="text-xs sm:text-sm font-black uppercase text-emerald-400 mb-2 sm:mb-3 flex items-center gap-2"><Phone size={16}/> Liên hệ Admin Zalo/SĐT:</p>
-                <p className="text-xl sm:text-2xl font-black text-white italic">0123.456.789</p>
+                <p className="text-xl sm:text-2xl font-black text-white italic">0362 944 056</p>
               </div>
             )}
             

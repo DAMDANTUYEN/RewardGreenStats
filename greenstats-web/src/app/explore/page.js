@@ -6,9 +6,42 @@ import Navbar from '@/components/Navbar';
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
-  const header = lines[0].match(/"([^"]*)"/g).map(f => f.replace(/^"|"$/g, ''));
+
+  function splitRow(line) {
+    const fields = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (i + 1 < line.length && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = false;
+          }
+        } else {
+          current += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          fields.push(current.trim());
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+    }
+    fields.push(current.trim());
+    return fields;
+  }
+
+  const header = splitRow(lines[0]);
   return lines.slice(1).map(line => {
-    const fields = line.match(/"([^"]*)"/g).map(f => f.replace(/^"|"$/g, ''));
+    const fields = splitRow(line);
     const row = {};
     header.forEach((h, i) => { if (i < fields.length) row[h] = fields[i]; });
     return row;

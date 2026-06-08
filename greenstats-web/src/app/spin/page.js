@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import { 
-  User, RotateCw, Trophy, X, Zap, Loader2, Phone, Shield, Activity, LogOut, Menu
+  Trophy, X, Loader2, Phone, Shield
 } from 'lucide-react';
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
   const [winner, setWinner] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [spinsLeft, setSpinsLeft] = useState(0); 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   
   // --- CẤU HÌNH LOGO THẬT ---
   const brandLogos = {
@@ -135,7 +135,7 @@ const App = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full font-tnr text-white overflow-hidden flex flex-col bg-black">
+    <div className="relative min-h-screen w-full text-white overflow-hidden flex flex-col bg-zinc-950">
       
       {/* BACKGROUND VIDEO */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -145,81 +145,7 @@ const App = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
       </div>
 
-      {/* NAVBAR NÂNG CẤP */}
-      <nav className="relative z-50 flex items-center justify-between px-6 py-5 md:px-16 md:py-6 backdrop-blur-xl border-b border-white/5">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="p-1 md:p-1.5 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/40 transition-all"><Zap size={20} className="md:w-[24px] md:h-[24px] text-emerald-400" /></div>
-          <div className="font-black uppercase tracking-tighter text-xl md:text-2xl italic">Green<span className="text-emerald-400">Stats</span></div>
-        </Link>
-
-        {/* Menu giữa */}
-        <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors">
-            <Link href="/">Giới thiệu</Link>
-          </li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors ">
-            <Link href="/destinations">ĐIỂM ĐẾN</Link>
-          </li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">
-            <Link href="/spin">Vòng quay</Link>
-          </li>
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors">
-            <Link href="/contact">Liên hệ</Link>
-          </li>
-        </ul>
-
-        {/* Auth Section */}
-        <div className="flex items-center gap-3 md:gap-4">
-          {user ? (
-            <div className="flex items-center gap-2 md:gap-3 bg-white/5 px-3 py-1.5 md:px-4 rounded-full border border-white/10 shadow-xl">
-              {/* ĐÃ SỬA CHỖ NÀY: Bỏ class hidden sm:block để luôn hiện trên mobile */}
-              <span className="text-[10px] md:text-xs font-black text-emerald-400 uppercase whitespace-nowrap">{spinsLeft} Lượt</span>
-              
-              <div className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-emerald-500/30 overflow-hidden shrink-0">
-                <img src={user.user_metadata?.avatar_url} className="w-full h-full object-cover" alt="avatar" />
-              </div>
-              <button onClick={handleLogout} className="p-1 md:p-1.5 hover:text-red-500 transition-colors" title="Đăng xuất">
-                <LogOut size={14} className="md:w-[16px] md:h-[16px]" />
-              </button>
-            </div>
-          ) : (
-            <button onClick={handleLogin} className="px-5 py-2 md:px-6 bg-emerald-500 text-black font-black uppercase text-[9px] md:text-[10px] tracking-widest rounded-full hover:scale-105 transition-all whitespace-nowrap">Đăng nhập</button>
-          )}
-          <Menu 
-            size={20} 
-            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors ml-1" 
-            onClick={() => setIsMobileMenuOpen(true)} 
-          />
-        </div>
-      </nav>
-
-      {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
-          
-          <button 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
-          >
-            <X size={32} strokeWidth={1.5} />
-          </button>
-          
-          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
-            <li>
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">Giới thiệu</Link>
-            </li>
-            <li>
-              <Link href="/destinations" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">ĐIỂM ĐẾN</Link>
-            </li>
-            <li>
-              <Link href="/spin" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md">Vòng quay</Link>
-            </li>
-            <li>
-              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">Liên hệ</Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Navbar active="spin" user={user} spinsLeft={spinsLeft} onLogin={handleLogin} onLogout={handleLogout} />
 
       {/* Main Content */}
       <main className="relative z-40 flex-1 flex flex-col items-center justify-center p-4 lg:p-6">
@@ -341,10 +267,6 @@ const App = () => {
 
       {/* CSS ÉP TNR */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
-        * { font-family: 'Times New Roman', Times, serif !important; }
-        .font-poppins { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important; }
-        body { background: #000; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes scaleUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }

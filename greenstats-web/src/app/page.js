@@ -1,15 +1,13 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, User, Menu, X, ArrowUpRight } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 
 const App = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const destinations = [
     {
       id: 0,
@@ -88,113 +86,7 @@ const App = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/20 to-black/90"></div>
       </div>
 
-      {/* Header */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 md:px-16">
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative">
-            <div className="absolute -inset-3 bg-emerald-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative p-1.5 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/50 group-hover:scale-110 flex items-center justify-center shadow-xl">
-              <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-500">
-                <path d="M48 40C45 38 40 38 35 43C32 46 32 50 35 55C38 60 45 65 52 65C60 65 65 60 68 55C70 52 70 48 68 45" stroke="#10b981" strokeWidth="6" strokeLinecap="round" />
-                <path d="M48 40L40 25M68 45L75 30" stroke="#10b981" strokeWidth="6" strokeLinecap="round" />
-                <path d="M20 50C20 30 35 15 50 15C65 15 80 30 80 50C80 70 65 85 50 85C35 85 20 70 20 50Z" stroke="#4ade80" strokeWidth="4" strokeDasharray="15 5" />
-                <path d="M50 15C60 15 75 25 80 40M80 60C75 75 60 85 50 85M20 50C20 65 35 85 50 85M50 15C35 15 20 35 20 50" stroke="#10b981" strokeWidth="8" strokeLinecap="round" />
-                <path d="M85 45C85 35 75 25 65 25" stroke="#4ade80" strokeWidth="5" strokeLinecap="round" />
-                <path d="M15 55C15 65 25 75 35 75" stroke="#4ade80" strokeWidth="5" strokeLinecap="round" />
-                <circle cx="39" cy="48" r="1.5" fill="#34d399" />
-              </svg>
-            </div>
-          </div>
-          <div className="flex items-center transition-all duration-500 group-hover:tracking-wider">
-            <span className="text-[16px] font-black uppercase tracking-tight text-white drop-shadow-md">Green</span>
-            <span className="text-[16px] font-extrabold uppercase tracking-tight text-emerald-500 drop-shadow-md">Stats</span>
-          </div>
-        </div>
-
-        <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
-          <li className="hover:text-emerald-400 cursor-pointer transition-colors border-b border-emerald-500 pb-1">Giới thiệu</li>
-          <li>
-            <Link href="/destinations" className="hover:text-emerald-400 cursor-pointer transition-colors">
-              ĐIỂM ĐẾN
-            </Link>
-          </li>
-          <li>
-            <Link href="/spin" className="hover:text-emerald-400 cursor-pointer transition-colors">
-              Vòng quay
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:text-emerald-400 cursor-pointer transition-colors">
-              Liên hệ
-            </Link>
-          </li>
-        </ul>
-
-        <div className="flex items-center gap-5">
-          <Search size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <User size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <Menu 
-            size={18} 
-            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
-            onClick={() => setIsMobileMenuOpen(true)} 
-          />
-        </div>
-      </nav>
-
-      {/* --- MOBILE MENU OVERLAY (TRONG SUỐT & GẠCH CHÂN) --- */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center animate-fade-in">
-          
-          <button 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
-          >
-            <X size={32} strokeWidth={1.5} />
-          </button>
-          
-          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
-            <li>
-              <Link 
-                href="/" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md"
-              >
-                Giới thiệu
-              </Link>
-            </li>
-            
-            <li>
-              <Link 
-                href="/destinations" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                ĐIỂM ĐẾN
-              </Link>
-            </li>
-            
-            <li>
-              <Link 
-                href="/spin" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                Vòng quay
-              </Link>
-            </li>
-            
-            <li>
-              <Link 
-                href="/contact" 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                className="text-white/70 hover:text-emerald-400 transition-colors"
-              >
-                Liên hệ
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Navbar active="home" />
 
       {/* Main Content */}
       <main className="relative z-40 flex flex-col items-center justify-center flex-1 w-full pt-8 pb-12 px-4">
@@ -304,9 +196,6 @@ const App = () => {
       </main>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
-        }
         @keyframes slideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
         @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

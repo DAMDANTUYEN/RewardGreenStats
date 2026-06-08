@@ -1,16 +1,12 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, User, Menu, X, Zap } from 'lucide-react';
-import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 // 🌿 LINK VIDEO NỀN CẦN GIỜ
 const VIDEO_URL = "https://sjv1f6z76labxq2f.public.blob.vercel-storage.com/Flycam%20r%E1%BB%ABng%20s%C3%A1c%20C%E1%BA%A7n%20Gi%E1%BB%9D.mp4";
 
 export default function ContactPage() {
-  // KHAI BÁO STATE BỊ THIẾU
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const lecturer = {
     name: "Hoàng Thị Vân",
     degree: "Tiến sĩ",
@@ -36,7 +32,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="relative w-full text-white bg-black min-h-screen flex flex-col overflow-x-hidden selection:bg-emerald-500/30">
+    <main className="relative w-full text-white bg-zinc-950 min-h-screen flex flex-col overflow-x-hidden selection:bg-emerald-500/30">
       
       {/* --- Video Background --- */}
       <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
@@ -48,91 +44,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90"></div>
       </div>
 
-      {/* --- Navbar Đồng Bộ Gốc --- */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 md:px-16 bg-black/50 backdrop-blur-md border-b border-white/5 sticky top-0">
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative">
-            <div className="absolute -inset-3 bg-emerald-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="relative p-1.5 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/50 group-hover:scale-110 flex items-center justify-center shadow-xl">
-              <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-500">
-                <path d="M48 40C45 38 40 38 35 43C32 46 32 50 35 55C38 60 45 65 52 65C60 65 65 60 68 55C70 52 70 48 68 45" stroke="#10b981" strokeWidth="6" strokeLinecap="round" />
-                <path d="M48 40L40 25M68 45L75 30" stroke="#10b981" strokeWidth="6" strokeLinecap="round" />
-                <path d="M20 50C20 30 35 15 50 15C65 15 80 30 80 50C80 70 65 85 50 85C35 85 20 70 20 50Z" stroke="#4ade80" strokeWidth="4" strokeDasharray="15 5" />
-                <path d="M50 15C60 15 75 25 80 40M80 60C75 75 60 85 50 85M20 50C20 65 35 85 50 85M50 15C35 15 20 35 20 50" stroke="#10b981" strokeWidth="8" strokeLinecap="round" />
-                <path d="M85 45C85 35 75 25 65 25" stroke="#4ade80" strokeWidth="5" strokeLinecap="round" />
-                <path d="M15 55C15 65 25 75 35 75" stroke="#4ade80" strokeWidth="5" strokeLinecap="round" />
-                <circle cx="39" cy="48" r="1.5" fill="#34d399" />
-              </svg>
-            </div>
-          </div>
-          <div className="flex items-center transition-all duration-500 group-hover:tracking-wider">
-            <span className="text-[16px] font-black uppercase tracking-tight text-white drop-shadow-md">Green</span>
-            <span className="text-[16px] font-extrabold uppercase tracking-tight text-emerald-500 drop-shadow-md">Stats</span>
-          </div>
-        </div>
-
-        <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
-          <li>
-            <Link href="/" className="hover:text-emerald-400 cursor-pointer transition-colors italic">Giới thiệu</Link>
-          </li>
-          <li>
-            <Link href="/destinations" className="hover:text-emerald-400 cursor-pointer transition-colors italic">Điểm đến</Link>
-          </li>
-          <li>
-            <Link href="/spin" className="hover:text-emerald-400 cursor-pointer transition-colors italic">Vòng quay</Link>
-          </li>
-          {/* Highlight trang hiện tại */}
-          <li className="text-emerald-400 border-b-2 border-emerald-500 pb-1 cursor-default italic drop-shadow-md">
-            Liên hệ
-          </li>
-        </ul>
-
-        <div className="flex items-center gap-5">
-          <Search size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <User size={16} className="hover:text-emerald-400 cursor-pointer transition-colors" />
-          <Menu 
-            size={18} 
-            className="lg:hidden text-white cursor-pointer hover:text-emerald-400 transition-colors" 
-            onClick={() => setIsMobileMenuOpen(true)} 
-          />
-        </div>
-      </nav>
-
-      {/* --- Mobile Menu Overlay Trong Suốt --- */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-2xl flex flex-col items-center justify-center animate-fade-in">
-          <button 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors"
-          >
-            <X size={32} strokeWidth={1.5} />
-          </button>
-          
-          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
-            <li>
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">
-                Giới thiệu
-              </Link>
-            </li>
-            <li>
-              <Link href="/destinations" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">
-                ĐIỂM ĐẾN
-              </Link>
-            </li>
-            <li>
-              <Link href="/spin" onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-emerald-400 transition-colors">
-                Vòng quay
-              </Link>
-            </li>
-            {/* Highlight trang Liên hệ trên Mobile */}
-            <li>
-              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-400 border-b-2 border-emerald-500 pb-2 drop-shadow-md">
-                LIÊN HỆ
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Navbar active="contact" />
 
       {/* --- Nội dung chính --- */}
       <motion.div 
@@ -199,14 +111,6 @@ export default function ContactPage() {
         </motion.section>
       </motion.div>
 
-      {/* Global CSS Forcing TNR & Fonts */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
-        * { font-family: 'Times New Roman', Times, serif !important; }
-        .font-poppins { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-      `}} />
     </main>
   );
 }

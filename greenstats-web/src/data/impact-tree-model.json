@@ -1,0 +1,490 @@
+{
+  "version": 2,
+  "viewBox": [
+    0,
+    0,
+    520,
+    900
+  ],
+  "preserveAspectRatio": "none",
+  "renderOrder": [
+    "ground",
+    "twigs",
+    "branches",
+    "trunk",
+    "rootFlare",
+    "leaves",
+    "nodes"
+  ],
+  "timeline": {
+    "totalDurationMs": 8600,
+    "ground": {
+      "startMs": 0,
+      "durationMs": 1000,
+      "easing": "cubic-bezier(0.22, 0.72, 0.2, 1)",
+      "initialOpacity": 0
+    },
+    "trunk": {
+      "startMs": 0,
+      "durationMs": 3200,
+      "easing": "cubic-bezier(0.22, 0.72, 0.2, 1)",
+      "initialOpacity": 0,
+      "initialDashOffset": 1
+    },
+    "rootFlare": {
+      "startMs": 200,
+      "durationMs": 1100,
+      "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+      "initialOpacity": 0,
+      "initialDashOffset": 1
+    },
+    "crownTwigs": {
+      "startMs": 2100,
+      "durationMs": 900,
+      "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+      "initialOpacity": 0,
+      "initialDashOffset": 1
+    },
+    "crownLeaves": {
+      "startMs": 2650,
+      "durationMs": 620,
+      "staggerMs": 55,
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "initialOpacity": 0
+    },
+    "branches": [
+      {
+        "id": "forest",
+        "bodyStartMs": 3200,
+        "bodyDurationMs": 1050,
+        "twigStartMs": 3820,
+        "twigDurationMs": 620,
+        "leafStartMs": 3980,
+        "leafDurationMs": 520,
+        "leafStaggerMs": 55,
+        "nodeStartMs": 5630,
+        "nodeDurationMs": 420,
+        "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "initialOpacity": 0,
+        "initialDashOffset": 1
+      },
+      {
+        "id": "biodiversity",
+        "bodyStartMs": 4000,
+        "bodyDurationMs": 1050,
+        "twigStartMs": 4620,
+        "twigDurationMs": 620,
+        "leafStartMs": 4780,
+        "leafDurationMs": 520,
+        "leafStaggerMs": 55,
+        "nodeStartMs": 6430,
+        "nodeDurationMs": 420,
+        "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "initialOpacity": 0,
+        "initialDashOffset": 1
+      },
+      {
+        "id": "waste",
+        "bodyStartMs": 4800,
+        "bodyDurationMs": 1050,
+        "twigStartMs": 5420,
+        "twigDurationMs": 620,
+        "leafStartMs": 5580,
+        "leafDurationMs": 520,
+        "leafStaggerMs": 55,
+        "nodeStartMs": 7230,
+        "nodeDurationMs": 420,
+        "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "initialOpacity": 0,
+        "initialDashOffset": 1
+      },
+      {
+        "id": "education",
+        "bodyStartMs": 5600,
+        "bodyDurationMs": 1050,
+        "twigStartMs": 6220,
+        "twigDurationMs": 620,
+        "leafStartMs": 6380,
+        "leafDurationMs": 520,
+        "leafStaggerMs": 55,
+        "nodeStartMs": 8030,
+        "nodeDurationMs": 420,
+        "easing": "cubic-bezier(0.2, 0.75, 0.25, 1)",
+        "initialOpacity": 0,
+        "initialDashOffset": 1
+      }
+    ]
+  },
+  "materials": {
+    "trunkGradient": [
+      {
+        "offset": 0,
+        "color": "#18271f"
+      },
+      {
+        "offset": 0.2,
+        "color": "#80643f"
+      },
+      {
+        "offset": 0.45,
+        "color": "#4d3928"
+      },
+      {
+        "offset": 0.68,
+        "color": "#a07b49"
+      },
+      {
+        "offset": 0.84,
+        "color": "#4e7058"
+      },
+      {
+        "offset": 1,
+        "color": "#14251d"
+      }
+    ],
+    "branchGradient": [
+      {
+        "offset": 0,
+        "color": "#a17b49"
+      },
+      {
+        "offset": 0.48,
+        "color": "#604b31"
+      },
+      {
+        "offset": 0.78,
+        "color": "#394b35"
+      },
+      {
+        "offset": 1,
+        "color": "#17281f"
+      }
+    ],
+    "leafPalettes": [
+      {
+        "id": "emerald",
+        "inner": "#7fd084",
+        "middle": "#327a4c",
+        "outer": "#123626"
+      },
+      {
+        "id": "lime",
+        "inner": "#c6d878",
+        "middle": "#6f8f42",
+        "outer": "#2d472b"
+      },
+      {
+        "id": "teal",
+        "inner": "#6ed2b4",
+        "middle": "#287765",
+        "outer": "#123d38"
+      },
+      {
+        "id": "gold",
+        "inner": "#d7ba69",
+        "middle": "#8a7038",
+        "outer": "#493c27"
+      }
+    ],
+    "twigColor": "#6f6641",
+    "leafVeinColor": "#c5e7b5",
+    "leafVeinOpacity": 0.45,
+    "shadowColor": "#00170d",
+    "shadowOpacity": 0.8
+  },
+  "leafGenerator": {
+    "goldenAngleRadians": 2.3999632297,
+    "coordinateDecimals": 1,
+    "wobbleAmplitude": 0.1,
+    "jitterX": 3.2,
+    "jitterY": 2.4,
+    "radiusXMin": 11,
+    "radiusXMax": 17,
+    "radiusYMin": 6,
+    "radiusYMax": 9,
+    "rotationMinDeg": -75,
+    "rotationMaxDeg": 74,
+    "finalScale": 1.18,
+    "finalOpacity": 0.9
+  },
+  "geometry": {
+    "ground": {
+      "cx": 260,
+      "cy": 852,
+      "radiusX": 108,
+      "radiusY": 20
+    },
+    "trunk": {
+      "bodyPath": "M198 852 C220 770 225 694 230 620 C236 548 219 480 230 399 C239 319 230 245 242 169 C249 119 251 74 256 38 L264 38 C270 78 272 122 271 169 C274 246 262 320 273 401 C285 482 268 550 286 622 C299 695 315 772 330 852 Z",
+      "growthPath": "M260 852 C250 742 270 650 258 565 C245 475 270 390 257 305 C249 236 264 166 258 96 C257 74 260 55 260 38",
+      "maskStrokeWidth": 152,
+      "bodyStrokeWidth": 2
+    },
+    "rootFlare": {
+      "path": "M218 803 C176 825 139 842 92 851 C147 853 196 846 236 832 M303 807 C347 827 389 843 438 851 C382 854 337 846 291 832",
+      "strokeWidth": 21
+    },
+    "crown": {
+      "twigPaths": [
+        "M259 166 C252 121 252 83 260 40",
+        "M253 107 C232 91 213 73 198 54",
+        "M264 113 C286 94 308 76 324 57",
+        "M251 127 C228 121 205 108 158 83",
+        "M269 128 C292 121 316 110 363 84",
+        "M250 145 C230 144 207 137 170 112",
+        "M271 146 C296 143 322 133 351 116"
+      ],
+      "twigStrokeWidth": 5,
+      "clusters": [
+        {
+          "centerX": 260,
+          "centerY": 95,
+          "radiusX": 125,
+          "radiusY": 62,
+          "count": 32,
+          "seed": 41
+        },
+        {
+          "centerX": 185,
+          "centerY": 65,
+          "radiusX": 75,
+          "radiusY": 46,
+          "count": 24,
+          "seed": 44
+        },
+        {
+          "centerX": 325,
+          "centerY": 72,
+          "radiusX": 70,
+          "radiusY": 44,
+          "count": 23,
+          "seed": 47
+        },
+        {
+          "centerX": 250,
+          "centerY": 145,
+          "radiusX": 90,
+          "radiusY": 50,
+          "count": 26,
+          "seed": 50
+        }
+      ]
+    },
+    "branches": [
+      {
+        "id": "forest",
+        "side": "left",
+        "nodeXPercent": 8,
+        "nodeYPercent": 65,
+        "silhouettePath": "M259 661 C226 649 199 637 168 619 C128 596 91 566 48 536 C87 558 125 579 165 596 C199 611 227 619 259 628 Z",
+        "growthPath": "M255 642 C205 630 153 608 101 570 C82 556 66 547 52 542",
+        "twigPaths": [
+          "M155 591 C130 571 116 549 110 524",
+          "M124 576 C95 575 73 567 54 551",
+          "M184 606 C158 611 136 608 117 597"
+        ],
+        "maskStrokeWidth": 64,
+        "twigStrokeWidth": 5,
+        "clusters": [
+          {
+            "centerX": 62,
+            "centerY": 535,
+            "radiusX": 67,
+            "radiusY": 45,
+            "count": 18,
+            "seed": 2
+          },
+          {
+            "centerX": 95,
+            "centerY": 505,
+            "radiusX": 48,
+            "radiusY": 32,
+            "count": 14,
+            "seed": 5
+          },
+          {
+            "centerX": 40,
+            "centerY": 565,
+            "radiusX": 40,
+            "radiusY": 28,
+            "count": 11,
+            "seed": 8
+          }
+        ]
+      },
+      {
+        "id": "biodiversity",
+        "side": "right",
+        "nodeXPercent": 92,
+        "nodeYPercent": 49,
+        "silhouettePath": "M268 525 C302 511 329 499 359 481 C400 457 439 425 482 392 C444 417 408 438 366 456 C333 470 304 480 269 492 Z",
+        "growthPath": "M271 507 C324 493 375 471 425 438 C446 424 463 409 479 398",
+        "twigPaths": [
+          "M382 458 C408 436 423 414 430 389",
+          "M417 439 C445 436 467 425 486 407",
+          "M352 474 C379 481 402 478 422 468"
+        ],
+        "maskStrokeWidth": 64,
+        "twigStrokeWidth": 5,
+        "clusters": [
+          {
+            "centerX": 458,
+            "centerY": 390,
+            "radiusX": 68,
+            "radiusY": 44,
+            "count": 19,
+            "seed": 11
+          },
+          {
+            "centerX": 418,
+            "centerY": 362,
+            "radiusX": 46,
+            "radiusY": 30,
+            "count": 14,
+            "seed": 14
+          },
+          {
+            "centerX": 472,
+            "centerY": 422,
+            "radiusX": 34,
+            "radiusY": 24,
+            "count": 10,
+            "seed": 17
+          }
+        ]
+      },
+      {
+        "id": "waste",
+        "side": "left",
+        "nodeXPercent": 7,
+        "nodeYPercent": 34,
+        "silhouettePath": "M261 413 C225 401 196 390 163 372 C120 349 78 315 39 284 C78 307 118 329 160 346 C197 361 228 370 263 380 Z",
+        "growthPath": "M260 397 C210 385 158 363 105 329 C82 314 62 301 43 292",
+        "twigPaths": [
+          "M146 350 C119 330 104 307 98 281",
+          "M108 331 C82 332 59 323 39 306",
+          "M179 364 C153 372 129 369 110 358"
+        ],
+        "maskStrokeWidth": 64,
+        "twigStrokeWidth": 5,
+        "clusters": [
+          {
+            "centerX": 55,
+            "centerY": 277,
+            "radiusX": 58,
+            "radiusY": 38,
+            "count": 17,
+            "seed": 23
+          },
+          {
+            "centerX": 90,
+            "centerY": 252,
+            "radiusX": 40,
+            "radiusY": 26,
+            "count": 13,
+            "seed": 26
+          },
+          {
+            "centerX": 36,
+            "centerY": 302,
+            "radiusX": 30,
+            "radiusY": 20,
+            "count": 10,
+            "seed": 29
+          }
+        ]
+      },
+      {
+        "id": "education",
+        "side": "right",
+        "nodeXPercent": 91,
+        "nodeYPercent": 20,
+        "silhouettePath": "M264 301 C297 288 326 276 357 258 C397 234 437 201 476 166 C440 193 402 214 362 232 C328 247 300 256 264 269 Z",
+        "growthPath": "M265 284 C316 271 365 249 415 215 C436 201 453 185 469 173",
+        "twigPaths": [
+          "M374 236 C398 214 413 192 419 165",
+          "M410 216 C438 213 459 202 478 184",
+          "M344 251 C371 257 393 254 414 243"
+        ],
+        "maskStrokeWidth": 64,
+        "twigStrokeWidth": 5,
+        "clusters": [
+          {
+            "centerX": 458,
+            "centerY": 157,
+            "radiusX": 52,
+            "radiusY": 36,
+            "count": 18,
+            "seed": 32
+          },
+          {
+            "centerX": 422,
+            "centerY": 128,
+            "radiusX": 38,
+            "radiusY": 25,
+            "count": 13,
+            "seed": 35
+          },
+          {
+            "centerX": 478,
+            "centerY": 188,
+            "radiusX": 30,
+            "radiusY": 20,
+            "count": 10,
+            "seed": 38
+          }
+        ]
+      }
+    ]
+  },
+  "layout": {
+    "desktop": {
+      "treeTopPx": 76,
+      "treeBottomPx": 72,
+      "treeWidthSvh": 56,
+      "treeMinWidthPx": 420,
+      "treeMaxWidthPx": 580,
+      "nodeWidthPx": 320,
+      "nodeMinHeightPx": 84,
+      "nodeDotPx": 58,
+      "nodeGapPx": 16,
+      "nodeTitlePx": 17,
+      "nodeAmountPx": 14,
+      "nodeBodyPx": 12,
+      "labelsFaceOutward": true
+    },
+    "mobile": {
+      "maxWidthPx": 720,
+      "treeTopPx": 190,
+      "treeBottomPx": 178,
+      "treeWidthVw": 86,
+      "treeWidthSvh": 39,
+      "treeMinWidthPx": 286,
+      "nodeWidthPx": 172,
+      "nodeMinHeightPx": 62,
+      "nodeDotPx": 42,
+      "nodeGapPx": 8,
+      "nodeTitlePx": 10.5,
+      "nodeAmountPx": 10,
+      "showNodeBody": false,
+      "labelsFaceOutward": false
+    },
+    "compact": {
+      "maxWidthPx": 360,
+      "maxHeightPx": 650,
+      "treeTopPx": 140,
+      "treeBottomPx": 110,
+      "treeWidthVw": 88,
+      "treeWidthSvh": 40,
+      "treeMinWidthPx": 250,
+      "nodeWidthPx": 148,
+      "nodeMinHeightPx": 50,
+      "nodeDotPx": 36,
+      "nodeGapPx": 6,
+      "nodeTitlePx": 9.5,
+      "nodeAmountPx": 10,
+      "showNodeBody": false,
+      "labelsFaceOutward": false
+    }
+  }
+}

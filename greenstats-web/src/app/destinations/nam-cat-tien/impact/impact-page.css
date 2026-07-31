@@ -1,0 +1,370 @@
+.demo-page {
+  --page-bg: #020806;
+  --page-text: #f3f6f4;
+  --page-muted: rgba(235, 243, 238, 0.62);
+  --page-faint: rgba(235, 243, 238, 0.4);
+  --emerald: #12c987;
+  --emerald-bright: #66e0ad;
+  --hairline: rgba(112, 255, 174, 0.18);
+  color: var(--page-text);
+}
+
+.demo-page button:focus-visible,
+.demo-page a:focus-visible {
+  outline: 2px solid var(--emerald-bright);
+  outline-offset: 4px;
+}
+
+.demo-page {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 56px);
+  place-items: center;
+  isolation: isolate;
+  background: var(--page-bg);
+}
+
+.demo-page--behind > :not([role="dialog"]) {
+  filter: blur(3px);
+  transform: scale(0.992);
+}
+
+.demo-page__background,
+.demo-page__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.impact-page__back {
+  position: absolute;
+  top: clamp(18px, 3vw, 32px);
+  left: clamp(16px, 3vw, 36px);
+  z-index: 2;
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  border: 1px solid rgba(112, 255, 174, 0.2);
+  border-radius: 999px;
+  background: rgba(3, 14, 9, 0.68);
+  color: rgba(235, 243, 238, 0.72);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  backdrop-filter: blur(12px);
+  transition: border-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.impact-page__back:hover {
+  border-color: rgba(102, 224, 173, 0.52);
+  color: var(--emerald-bright);
+  transform: translateX(-2px);
+}
+
+.demo-page__background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 56%;
+  animation: forest-breathe 18s ease-out both;
+}
+
+.demo-page__veil {
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(1, 5, 3, 0.54), rgba(1, 5, 3, 0.88)),
+    linear-gradient(90deg, rgba(0, 4, 2, 0.42), transparent 48%, rgba(0, 4, 2, 0.42));
+}
+
+.demo-ticket {
+  position: relative;
+  width: min(100%, 480px);
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 42px);
+  border: 1px solid rgba(112, 255, 174, 0.22);
+  border-radius: 8px;
+  background: rgba(3, 14, 9, 0.82);
+  box-shadow: 0 36px 100px rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(15px);
+  animation: ticket-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.demo-ticket::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--emerald), transparent 74%);
+  content: "";
+}
+
+.demo-ticket__brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 38px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.demo-ticket__brand strong {
+  color: var(--emerald);
+}
+
+.demo-ticket__mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  color: var(--emerald);
+}
+
+.demo-ticket__mark svg {
+  width: 27px;
+  height: 27px;
+}
+
+.demo-ticket__heading > p {
+  margin: 0 0 10px;
+  color: var(--emerald-bright);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+}
+
+.demo-ticket__heading h1 {
+  margin: 0;
+  font-size: clamp(34px, 6vw, 48px);
+  font-weight: 780;
+  line-height: 1.04;
+  text-transform: uppercase;
+}
+
+.demo-ticket__heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 13px;
+  color: var(--page-muted);
+  font-size: 14px;
+}
+
+.demo-ticket__heading > span svg {
+  color: #c9ad78;
+}
+
+.demo-ticket__divider {
+  height: 1px;
+  margin: 30px 0 26px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(112, 255, 174, 0.24) 0 8px,
+    transparent 8px 14px
+  );
+}
+
+.demo-ticket__facts {
+  display: grid;
+  margin: 0;
+  gap: 0;
+}
+
+.demo-ticket__facts > div {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(235, 243, 238, 0.09);
+}
+
+.demo-ticket__facts dt {
+  color: var(--page-muted);
+  font-size: 13px;
+}
+
+.demo-ticket__facts dd {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+.demo-ticket__facts .demo-ticket__contribution {
+  color: var(--emerald-bright);
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.demo-ticket__impact {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0 22px;
+}
+
+.demo-ticket__impact p {
+  margin: 0;
+  color: var(--page-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.demo-ticket__qr {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.impact-trigger {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 54px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 22px;
+  border: 1px solid var(--emerald);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--emerald-bright);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 260ms ease, transform 220ms ease;
+}
+
+.impact-trigger::before {
+  position: absolute;
+  inset: 0;
+  background: var(--emerald);
+  content: "";
+  transform: translateX(-101%);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.impact-trigger span,
+.impact-trigger svg {
+  position: relative;
+  z-index: 1;
+}
+
+.impact-trigger:hover,
+.impact-trigger:focus-visible {
+  color: #001a0f;
+  transform: translateY(-2px);
+}
+
+.impact-trigger:hover::before,
+.impact-trigger:focus-visible::before {
+  transform: translateX(0);
+}
+
+@keyframes ticket-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes forest-breathe {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 560px) {
+  .demo-page {
+    overflow-y: auto;
+    padding: 72px 15px 18px;
+  }
+
+  .demo-page__background img {
+    object-position: 54% 50%;
+  }
+
+  .demo-ticket {
+    padding: 26px 22px 24px;
+  }
+
+  .demo-ticket__brand {
+    margin-bottom: 32px;
+    font-size: 13px;
+  }
+
+  .demo-ticket__heading h1 {
+    font-size: clamp(32px, 10.5vw, 42px);
+  }
+
+  .demo-ticket__facts > div {
+    min-height: 48px;
+  }
+
+  .demo-ticket__facts dt {
+    font-size: 12px;
+  }
+
+  .demo-ticket__facts dd {
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 561px) {
+  .demo-ticket {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .demo-ticket__brand {
+    margin-bottom: 24px;
+  }
+
+  .demo-ticket__divider {
+    margin-top: 22px;
+    margin-bottom: 18px;
+  }
+
+  .demo-ticket__impact {
+    margin-top: 18px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

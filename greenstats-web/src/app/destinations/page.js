@@ -1,31 +1,35 @@
 "use client";
 import React, { useState, useEffect,Suspense } from 'react';
-import { MapPin, Leaf, Trees, Droplets, Sun, ChevronDown, ChevronUp, History, Zap, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { MapPin, Leaf, Trees, Droplets, Sun, ChevronDown, ChevronUp, History, Zap, Loader2, CircleDollarSign, ArrowUpRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { useSearchParams } from 'next/navigation';  
 const DestinationsContent = () => {
+  const searchParams = useSearchParams();
+  const expandParam = searchParams.get('expand');
   // State quản lý việc mở rộng nội dung của từng địa điểm
-  const [expandedId, setExpandedId] = useState(null);
+  const [expandedId, setExpandedId] = useState(() => {
+    if (expandParam === null) return null;
+    const parsedId = Number.parseInt(expandParam, 10);
+    return Number.isNaN(parsedId) ? null : parsedId;
+  });
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
   };
-  const searchParams = useSearchParams();
-  // Dữ liệu chi tiết nạp từ tài liệu nghiên cứu
-  const expandParam = searchParams.get('expand');
-
   useEffect(() => {
     if (expandParam !== null) {
       const idToExpand = parseInt(expandParam, 10);
-      setExpandedId(idToExpand);
-      
+
       // Đợi nửa giây cho trang load xong rồi trượt màn hình xuống đúng cái ô đó
-      setTimeout(() => {
+      const scrollTimer = setTimeout(() => {
         const element = document.getElementById(`destination-${idToExpand}`);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 500);
+
+      return () => clearTimeout(scrollTimer);
     }
   }, [expandParam]);
   const destinationsData = [
@@ -59,6 +63,7 @@ const DestinationsContent = () => {
       ecology: "Bảo tồn 1.610 loài thực vật và 1.568 loài động vật, trong đó hàng chục loài nằm trong Sách Đỏ. Đây là môi trường sống của các loài cực kỳ quý hiếm như Chà vá chân đen, Hoẵng Nam Bộ. Hệ sinh thái rừng bao gồm rừng thường xanh lá rộng, rừng tre nứa (Lồ Ô, Mum) và các thảm thực vật đất ngập nước nội địa.",
       highlights: "Bàu Sấu (92,63 ha) với 100 cá thể cá Sấu Xiêm; Sông Đồng Nai dài 90km; Các thác nước hùng vĩ như Thác Trời, Bến Cự.",
       tags: ["Ramsar", "Sách Đỏ", "Khảo cổ"],
+      impactHref: "/destinations/nam-cat-tien/impact",
       icon: <Trees className="text-emerald-400" size={24} />
     },
     {
@@ -169,6 +174,35 @@ const DestinationsContent = () => {
                             </div>
                             <p className="text-[13px] italic leading-relaxed text-emerald-100/80 uppercase font-bold">{dest.highlights}</p>
                         </section>
+
+                        {dest.impactHref && (
+                          <section className="relative overflow-hidden rounded-[2rem] border border-emerald-500/20 bg-gradient-to-br from-emerald-500/[0.12] via-white/[0.03] to-transparent p-7 md:p-9">
+                            <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" aria-hidden="true" />
+                            <div className="relative flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
+                              <div className="max-w-xl">
+                                <div className="mb-4 flex items-center gap-3 text-emerald-400">
+                                  <span className="grid h-10 w-10 place-items-center rounded-xl border border-emerald-500/25 bg-emerald-500/10">
+                                    <CircleDollarSign size={20} />
+                                  </span>
+                                  <span className="text-[10px] font-black uppercase tracking-[0.24em]">Minh bạch đóng góp</span>
+                                </div>
+                                <h4 className="mb-3 text-2xl font-black uppercase tracking-tight text-white md:text-3xl">
+                                  Tiền vé của bạn được sử dụng ra sao?
+                                </h4>
+                                <p className="text-sm leading-relaxed text-zinc-400">
+                                  Theo dõi cách 50.000đ đóng góp được phân bổ cho phục hồi rừng, bảo tồn đa dạng sinh học, thu gom rác và giáo dục cộng đồng.
+                                </p>
+                              </div>
+                              <Link
+                                href={dest.impactHref}
+                                className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-3 rounded-full bg-emerald-500 px-6 text-[10px] font-black uppercase tracking-[0.16em] text-zinc-950 shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-400"
+                              >
+                                Xem phân bổ
+                                <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                              </Link>
+                            </div>
+                          </section>
+                        )}
                     </div>
                 </div>
 

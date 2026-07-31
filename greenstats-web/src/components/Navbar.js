@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Giới thiệu', key: 'home' },
+  { href: '/our-story', label: 'Hành trình', key: 'story' },
   { href: '/explore', label: 'KHÁM PHÁ', key: 'explore' },
   { href: '/destinations', label: 'ĐIỂM ĐẾN', key: 'destinations' },
   { href: '/spin', label: 'Vòng quay', key: 'spin' },
@@ -48,9 +49,9 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
         </div>
 
         {/* Desktop links */}
-        <ul className="hidden lg:flex items-center gap-8 text-[9px] font-semibold tracking-[0.2em] uppercase opacity-70 font-poppins">
+        <ul className="hidden lg:flex items-center gap-7 text-[11px] font-semibold tracking-[0.16em] uppercase opacity-75 font-poppins">
           {NAV_ITEMS.map(item => (
-            <li key={item.key} className="hover:text-emerald-400 cursor-pointer transition-colors">
+            <li key={item.key} className={`cursor-pointer transition-colors hover:text-emerald-400 ${active === item.key ? 'text-emerald-400 opacity-100' : ''}`}>
               <Link href={item.href}>{item.label}</Link>
             </li>
           ))}
@@ -94,7 +95,7 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
                 <Link
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-white/70 hover:text-emerald-400 transition-colors"
+                  className={`transition-colors hover:text-emerald-400 ${active === item.key ? 'text-emerald-400' : 'text-white/70'}`}
                 >
                   {item.label}
                 </Link>

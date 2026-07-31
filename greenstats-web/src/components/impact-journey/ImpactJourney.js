@@ -61,7 +61,11 @@ export function ImpactJourney({
   const [scene, setScene] = useState("idle");
   const [selectedItem, setSelectedItem] = useState(null);
   const [displayAmount, setDisplayAmount] = useState(0);
-  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [isReducedMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const closeButtonRef = useRef(null);
   const overlayRef = useRef(null);
   const previousFocusRef = useRef(null);
@@ -165,7 +169,6 @@ export function ImpactJourney({
 
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reducedMotion = mediaQuery.matches;
-    setIsReducedMotion(reducedMotion);
     previousFocusRef.current = document.activeElement;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -173,16 +176,19 @@ export function ImpactJourney({
     const hasViewed = window.sessionStorage.getItem(
       `impact-journey:${data.ticketId}`,
     );
+    let initialSceneFrame = null;
 
     window.requestAnimationFrame(() => closeButtonRef.current?.focus());
 
     if (status === "ready") {
-      if (hasViewed || reducedMotion) {
-        setDisplayAmount(data.totalContribution);
-        setScene("complete");
-      } else {
-        void playSequence();
-      }
+      initialSceneFrame = window.requestAnimationFrame(() => {
+        if (hasViewed || reducedMotion) {
+          setDisplayAmount(data.totalContribution);
+          setScene("complete");
+        } else {
+          void playSequence();
+        }
+      });
     }
 
     const handleKeyDown = (event) => {
@@ -215,6 +221,9 @@ export function ImpactJourney({
 
     return () => {
       stopSequence();
+      if (initialSceneFrame !== null) {
+        window.cancelAnimationFrame(initialSceneFrame);
+      }
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
       previousFocusRef.current?.focus();

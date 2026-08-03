@@ -445,27 +445,3 @@
     display: var(--node-body-display-compact);
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .treeReveal,
-  .rootFlare,
-  .crownTwig,
-  .branchTwig {
-    stroke-dashoffset: 0;
-    animation: none !important;
-  }
-
-  .treeGroundShadow,
-  .barkLayer,
-  .treeNode {
-    opacity: 1;
-    animation: none !important;
-    transition: none;
-  }
-
-  .leafShape {
-    opacity: var(--leaf-final-opacity);
-    transform: scale(var(--leaf-final-scale));
-    animation: none !important;
-  }
-}

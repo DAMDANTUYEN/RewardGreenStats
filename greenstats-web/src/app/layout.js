@@ -3,9 +3,11 @@ import "./globals.css";
 
 // Khởi tạo font Poppins chuẩn Next.js
 const poppins = Poppins({
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-poppins",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
 export const metadata = {
@@ -25,7 +27,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="vi">
-      <body className={`${poppins.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body
+        className={`${poppins.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

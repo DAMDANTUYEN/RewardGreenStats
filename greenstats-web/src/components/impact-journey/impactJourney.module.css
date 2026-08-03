@@ -1150,29 +1150,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .overlay *,
-  .overlay *::before,
-  .overlay *::after {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0ms !important;
-  }
-
-  .particleLayer {
-    display: none;
-  }
-
-  .background img {
-    transform: none;
-  }
-
-  .depthScene {
-    transform: none;
-  }
-}
-
 /* Organic impact tree */
 .treeNetwork {
   position: absolute;
@@ -1632,30 +1609,5 @@
 
   .treeNodeCopy strong {
     font-size: 9.5px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .treeRevealActive,
-  .branchLayerActive .twigLayer path,
-  .crownLayerActive .crownTwig {
-    stroke-dashoffset: 0;
-    animation: none;
-  }
-
-  .branchLayerActive .foliageLayer .leafShape,
-  .crownLayerActive .leafShape,
-  .treeNetworkVisible .treeGroundShadow {
-    opacity: 0.9;
-    animation: none;
-  }
-
-  .branchLayerActive .foliageLayer .leafShape,
-  .crownLayerActive .leafShape {
-    transform: scale(1.18);
-  }
-
-  .treeNetworkVisible .treeGroundShadow {
-    transform: none;
   }
 }

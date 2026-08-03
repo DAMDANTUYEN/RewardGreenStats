@@ -1,109 +1,544 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Expand, Grid2X2, Leaf, Minimize, X } from "lucide-react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Focus,
+  Grid2X2,
+  Maximize2,
+  Minimize,
+  Minimize2,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import HTMLFlipBook from "react-pageflip";
+
 import Navbar from "@/components/Navbar";
+
 import styles from "./proposal.module.css";
+
+const PAGE_COUNT = 20;
+const LAST_PAGE_INDEX = PAGE_COUNT - 1;
+const INTERIOR_SPREAD_COUNT = (PAGE_COUNT - 2) / 2;
+const EXPERIENCE_URL =
+  "https://www.greenstats.site/destinations/nam-cat-tien/impact";
+const EXPERIENCE_PAGE_POSITION = { x: 82.46, y: 88.51 };
 
 const SPREADS = [
   { label: "Bìa trước", pages: [1], type: "cover" },
-  ...Array.from({ length: 8 }, (_, index) => ({ label: `Trang ${index * 2 + 2}–${index * 2 + 3}`, pages: [index * 2 + 2, index * 2 + 3], type: "spread" })),
-  { label: "Bìa sau", pages: [18], type: "back" },
+  ...Array.from({ length: INTERIOR_SPREAD_COUNT }, (_, index) => ({
+    label: `Trang ${index * 2 + 2}–${index * 2 + 3}`,
+    pages: [index * 2 + 2, index * 2 + 3],
+    type: "spread",
+  })),
+  { label: "Bìa sau", pages: [PAGE_COUNT], type: "back" },
 ];
 
-
-function BlankPage({ number, side, type, quiet = false }) {
-  return <article className={`${styles.paper} ${styles[side]} ${styles[type]}`} aria-label={`Trang ${number}`}>
-    <div className={styles.paperTexture} aria-hidden="true" />
-    {!quiet && <><span className={styles.paperBrand}><Leaf size={12} /> GreenStats</span><span className={styles.paperGhost}>{String(number).padStart(2, "0")}</span><div className={styles.paperCaption}><small>Research proposal</small><strong>Trang {String(number).padStart(2, "0")}</strong><p>Nội dung mẫu sẽ được thay bằng proposal chính thức.</p></div><span className={styles.folio}>{number}</span></>}
-  </article>;
+function pageIndexToSpreadIndex(pageIndex) {
+  if (pageIndex <= 0) return 0;
+  if (pageIndex >= LAST_PAGE_INDEX) return SPREADS.length - 1;
+  return Math.floor((pageIndex + 1) / 2);
 }
 
-function Intro({ onStart }) {
-  return <motion.div className={styles.intro} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5 }}>
-    <Navbar active="proposal" />
-    <header className={styles.hero}>
-      <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .85, ease: [.16, 1, .3, 1] }}>
-        <span className={styles.eyebrow}><BookOpen size={15} /> Research proposal · 18 trang A4</span>
-        <h1>Một ý tưởng.<br /><em>Mười tám trang.</em></h1>
-        <p>Không gian trình chiếu proposal GreenStats được kể như một cuốn sách — tĩnh lặng, tập trung và giàu chiều sâu.</p>
-        <button onClick={onStart} className={styles.start}>Mở cuốn sách <ArrowDown size={17} /></button>
-      </motion.div>
-      <motion.div className={styles.heroBook} initial={{ opacity: 0, rotate: 9, y: 30 }} animate={{ opacity: 1, rotate: 5, y: 0 }} transition={{ duration: 1, delay: .18, ease: [.16, 1, .3, 1] }} aria-hidden="true"><span>18</span><small>pages · A4</small></motion.div>
-    </header>
-  </motion.div>;
+function spreadIndexToPageIndex(spreadIndex) {
+  if (spreadIndex <= 0) return 0;
+  if (spreadIndex >= SPREADS.length - 1) return LAST_PAGE_INDEX;
+  return spreadIndex * 2 - 1;
+}
+
+const ProposalPageSheet = forwardRef(function ProposalPageSheet(
+  { number },
+  ref,
+) {
+  const isCover = number === 1;
+  const isBack = number === PAGE_COUNT;
+  const side = number % 2 === 0 ? "leftPage" : "rightPage";
+  const pageType = isCover ? "cover" : isBack ? "back" : "inside";
+
+  return (
+    <article
+      ref={ref}
+      data-density={isCover || isBack ? "hard" : "soft"}
+      className={`${styles.paper} ${styles[side]} ${styles[pageType]}`}
+      aria-label={`Trang ${number}`}
+    >
+      <Image
+        className={styles.pageArtwork}
+        src={`/proposal/pages/${String(number).padStart(2, "0")}.jpg`}
+        alt={`Nội dung trang ${number} của Green Marketing Proposal`}
+        fill
+        sizes="(max-width: 760px) 94vw, 520px"
+        priority={number <= 3}
+        loading={number === PAGE_COUNT ? "eager" : undefined}
+        draggable={false}
+      />
+      {number === 6 && (
+        <a
+          className={styles.experienceLink}
+          href={EXPERIENCE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            left: `${EXPERIENCE_PAGE_POSITION.x}%`,
+            top: `${EXPERIENCE_PAGE_POSITION.y}%`,
+          }}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
+          aria-label="Trải nghiệm hành trình tác động tại Nam Cát Tiên"
+        >
+          Trải nghiệm
+        </a>
+      )}
+      <span className={styles.pageEdge} aria-hidden="true" />
+    </article>
+  );
+});
+
+ProposalPageSheet.displayName = "ProposalPageSheet";
+
+function Intro({ launching, onStart }) {
+  return (
+    <motion.div
+      className={`${styles.intro} ${launching ? styles.introLaunching : ""}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: launching ? 0 : 1 }}
+      transition={{ duration: launching ? 0.7 : 0.5 }}
+    >
+      <Navbar active="proposal" />
+      <header className={styles.hero}>
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className={styles.eyebrow}>
+            <BookOpen size={15} /> Green marketing proposal · 20 trang A4
+          </span>
+          <h1>
+            Một ý tưởng.
+            <br />
+            <em>Hai mươi trang.</em>
+          </h1>
+          <p>
+            Không gian trình chiếu proposal GreenStats được kể như một cuốn
+            sách — tĩnh lặng, tập trung và giàu chiều sâu.
+          </p>
+          <button
+            type="button"
+            onClick={onStart}
+            className={styles.start}
+            disabled={launching}
+          >
+            {launching ? "Đang mở sách" : "Mở cuốn sách"} <ArrowDown size={17} />
+          </button>
+        </motion.div>
+        <motion.div
+          className={`${styles.heroBook} ${launching ? styles.heroBookLaunching : ""}`}
+          initial={{ opacity: 0, rotate: 9, y: 30 }}
+          animate={{
+            opacity: 1,
+            rotate: launching ? 0 : 5,
+            y: 0,
+            scale: launching ? 1.16 : 1,
+          }}
+          transition={{
+            duration: 1,
+            delay: 0.18,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          aria-hidden="true"
+        >
+          <div className={styles.bookModel}>
+            <div className={styles.bookFront}>
+              <Image
+                src="/proposal/pages/01.jpg"
+                alt=""
+                fill
+                sizes="360px"
+                priority
+              />
+            </div>
+            <div className={styles.bookBack}>
+              <Image
+                src="/proposal/pages/20.jpg"
+                alt=""
+                fill
+                sizes="360px"
+                loading="eager"
+              />
+            </div>
+            <span className={styles.bookRightEdge} />
+            <span className={styles.bookSpine} />
+            <span className={styles.bookTopEdge} />
+            <span className={styles.bookBottomEdge} />
+          </div>
+
+        </motion.div>
+      </header>
+    </motion.div>
+  );
 }
 
 export default function ProposalPage() {
+  const bookRef = useRef(null);
+  const launchTimerRef = useRef(null);
   const [started, setStarted] = useState(false);
-  const [spreadIndex, setSpreadIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [turnToken, setTurnToken] = useState(0);
+  const [launching, setLaunching] = useState(false);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [bookReady, setBookReady] = useState(false);
   const [indexOpen, setIndexOpen] = useState(false);
   const [focus, setFocus] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const reduceMotion = useReducedMotion();
+
+  const spreadIndex = pageIndexToSpreadIndex(pageIndex);
   const spread = SPREADS[spreadIndex];
 
-  const goTo = useCallback((nextIndex) => {
-    const safe = Math.max(0, Math.min(SPREADS.length - 1, nextIndex));
-    if (safe === spreadIndex) return;
-    setDirection(safe > spreadIndex ? 1 : -1);
-    setSpreadIndex(safe);
-    setTurnToken(token => token + 1);
-    setIndexOpen(false);
-  }, [spreadIndex]);
-  const previous = useCallback(() => goTo(spreadIndex - 1), [goTo, spreadIndex]);
-  const next = useCallback(() => goTo(spreadIndex + 1), [goTo, spreadIndex]);
+  const getBook = useCallback(() => bookRef.current?.pageFlip?.(), []);
 
-  useEffect(() => {
-    const onKeyDown = event => {
-      if (!started) return;
-      if (event.key === "Escape") { setIndexOpen(false); setFocus(false); }
-      if (["ArrowLeft", "PageUp"].includes(event.key)) previous();
-      if (["ArrowRight", "PageDown", " "].includes(event.key)) { event.preventDefault(); next(); }
-      if (event.key.toLowerCase() === "f") setFocus(value => !value);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [next, previous, started]);
+  const previous = useCallback(() => {
+    getBook()?.flipPrev("top");
+  }, [getBook]);
 
-  useEffect(() => {
-    const sync = () => setFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", sync);
-    return () => document.removeEventListener("fullscreenchange", sync);
+  const next = useCallback(() => {
+    getBook()?.flipNext("top");
+  }, [getBook]);
+
+  const goTo = useCallback(
+    (nextSpreadIndex) => {
+      const safeIndex = Math.max(
+        0,
+        Math.min(SPREADS.length - 1, nextSpreadIndex),
+      );
+      const targetPage = spreadIndexToPageIndex(safeIndex);
+
+      if (targetPage !== pageIndex) {
+        getBook()?.flip(targetPage, "top");
+      }
+      setIndexOpen(false);
+    },
+    [getBook, pageIndex],
+  );
+
+  const enterFocus = useCallback(() => {
+    setBookReady(false);
+    setFocus(true);
   }, []);
 
-  const pageRange = useMemo(() => spread.pages.map(page => String(page).padStart(2, "0")).join(" — "), [spread]);
-  const toggleFullscreen = async () => document.fullscreenElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.();
+  const exitFocus = useCallback(async () => {
+    if (document.fullscreenElement) await document.exitFullscreen?.();
+    setBookReady(false);
+    setFocus(false);
+  }, []);
 
-  if (!started) return <div className={styles.viewer}><div className={styles.ambient} aria-hidden="true" /><Intro onStart={() => setStarted(true)} /></div>;
+  const startReader = useCallback(() => {
+    if (launching) return;
 
-  return <div className={`${styles.viewer} ${focus ? styles.focusMode : ""}`}>
-    {!focus && <div className={styles.ambient} aria-hidden="true" />}
-    <div className={styles.reader}>
-      {!focus && <Navbar active="proposal" />}
-      {!focus && <header className={styles.readerHeader}><div><span><BookOpen size={14} /> Proposal viewer</span><h1>GreenStats <em>— 18 trang A4</em></h1></div><p>{spread.label}</p></header>}
-      <main className={styles.stage} aria-live="polite">
-        <button className={`${styles.turnButton} ${styles.turnPrevious}`} onClick={previous} disabled={spreadIndex === 0} aria-label="Trang trước"><ArrowLeft /></button>
-        <div className={styles.bookScene}>
-          {!focus && <div className={`${styles.bookShadow} ${spread.type === "spread" ? styles.wideShadow : ""}`} aria-hidden="true" />}
-          <section className={`${styles.book} ${styles[spread.type]}`} onDoubleClick={() => setFocus(true)} aria-label={`${spread.label}. Nhấp đúp để phóng to.`}>
-            {spread.pages.map((number, index) => <BlankPage key={number} number={number} side={spread.pages.length === 1 ? "single" : index === 0 ? "leftPage" : "rightPage"} type={spread.type} />)}
-            <AnimatePresence>{turnToken > 0 && !reduceMotion && <motion.div key={turnToken} className={[styles.turningSheet, direction > 0 ? styles.turnForward : styles.turnBackward].join(" ")} initial={{ rotateY: 0 }} animate={{ rotateY: direction > 0 ? -180 : 180 }} exit={{ opacity: 0 }} transition={{ duration: .9, ease: [.42, .03, .2, 1] }}>
-              <div className={[styles.turnSide, styles.turnFront].join(" ")}><BlankPage number={direction > 0 ? Math.max(1, spread.pages[0] - 1) : Math.min(18, spread.pages.at(-1) + 1)} side="turnFace" type="spread" quiet /></div>
-              <div className={[styles.turnSide, styles.turnBack].join(" ")}><BlankPage number={direction > 0 ? spread.pages[0] : spread.pages.at(-1)} side="turnFace" type="spread" quiet /></div>
-            </motion.div>}</AnimatePresence>
-            <span className={styles.pageBlock} aria-hidden="true" />
-          </section>
-        </div>
-        <button className={`${styles.turnButton} ${styles.turnNext}`} onClick={next} disabled={spreadIndex === SPREADS.length - 1} aria-label="Trang sau"><ArrowRight /></button>
-        {!focus && <button className={styles.zoomButton} onClick={() => setFocus(true)} aria-label="Phóng to cuốn sách"><Expand size={16} /><span>Phóng to</span></button>}
-        {focus && <button className={styles.exitFocus} onClick={() => setFocus(false)} aria-label="Thu nhỏ"><Minimize size={18} /><span>Thoát chế độ tập trung</span></button>}
-      </main>
-      {!focus && <footer className={styles.toolbar}><button onClick={() => setIndexOpen(true)} title="Mục lục"><Grid2X2 size={16} /></button><button onClick={previous} disabled={spreadIndex === 0} title="Trang trước"><ArrowLeft size={16} /></button><div className={styles.progress}><span style={{ width: `${((spreadIndex + 1) / SPREADS.length) * 100}%` }} /></div><strong>{pageRange}</strong><small>/ 18</small><button onClick={next} disabled={spreadIndex === SPREADS.length - 1} title="Trang sau"><ArrowRight size={16} /></button><button onClick={toggleFullscreen} title="Toàn màn hình">{fullscreen ? <Minimize size={16} /> : <Expand size={16} />}</button></footer>}
-    </div>
-    <AnimatePresence>{indexOpen && <motion.div className={styles.indexOverlay} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.section initial={{ y: 24, opacity: 0, scale: .98 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 18, opacity: 0 }}><header><div><small>Document index</small><h2>Các phần của cuốn sách</h2></div><button onClick={() => setIndexOpen(false)} aria-label="Đóng"><X /></button></header><div className={styles.indexGrid}>{SPREADS.map((item, index) => <button key={item.label} onClick={() => goTo(index)} className={index === spreadIndex ? styles.current : ""}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.label}</strong><small>{item.type === "spread" ? "Hai trang đối diện" : "Một trang độc lập"}</small></div><ArrowRight size={14} /></button>)}</div></motion.section></motion.div>}</AnimatePresence>
-  </div>;
+    setLaunching(true);
+    launchTimerRef.current = window.setTimeout(() => setStarted(true), 680);
+  }, [launching]);
+
+  const toggleFullscreen = useCallback(async () => {
+    if (document.fullscreenElement) await document.exitFullscreen?.();
+    else await document.documentElement.requestFullscreen?.();
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (launchTimerRef.current) window.clearTimeout(launchTimerRef.current);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const syncFullscreen = () =>
+      setFullscreen(Boolean(document.fullscreenElement));
+
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () =>
+      document.removeEventListener("fullscreenchange", syncFullscreen);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (!started) return;
+
+      if (event.key === "Escape") {
+        if (indexOpen) setIndexOpen(false);
+        else if (fullscreen) return;
+        else if (focus) exitFocus();
+        return;
+      }
+
+      if (indexOpen) return;
+
+      if (["ArrowLeft", "PageUp"].includes(event.key)) previous();
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        next();
+      }
+      if (event.key.toLowerCase() === "f") {
+        if (focus) exitFocus();
+        else enterFocus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [
+    enterFocus,
+    exitFocus,
+    focus,
+    fullscreen,
+    indexOpen,
+    next,
+    previous,
+    started,
+  ]);
+
+  const pageRange = useMemo(
+    () =>
+      spread.pages
+        .map((page) => String(page).padStart(2, "0"))
+        .join(" — "),
+    [spread],
+  );
+
+  if (!started) {
+    return (
+      <div className={styles.viewer}>
+        <div className={styles.ambient} aria-hidden="true" />
+        <Intro launching={launching} onStart={startReader} />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      className={`${styles.viewer} ${focus ? styles.focusMode : ""}`}
+      initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.985 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: reduceMotion ? 0.01 : 0.72, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {!focus && <div className={styles.ambient} aria-hidden="true" />}
+      <div className={styles.reader}>
+        {!focus && <Navbar active="proposal" />}
+        {!focus && (
+          <header className={styles.readerHeader}>
+            <div>
+              <span>
+                <BookOpen size={14} /> Proposal viewer
+              </span>
+              <h1>
+                GreenStats
+              </h1>
+            </div>
+            <p>{spread.label}</p>
+          </header>
+        )}
+
+        <main className={styles.stage} aria-live="polite">
+          <button
+            type="button"
+            className={`${styles.turnButton} ${styles.turnPrevious}`}
+            onClick={previous}
+            disabled={!bookReady || pageIndex === 0}
+            aria-label="Trang trước"
+          >
+            <ArrowLeft />
+          </button>
+
+          <div
+            className={`${styles.bookScene} ${
+              pageIndex === 0
+                ? styles.coverCentered
+                : pageIndex === LAST_PAGE_INDEX
+                  ? styles.backCentered
+                  : ""
+            }`}
+          >
+            <div className={styles.bookGroundShadow} aria-hidden="true" />
+            <HTMLFlipBook
+              key={focus ? "proposal-focus" : "proposal-reader"}
+              ref={bookRef}
+              className={styles.flipBook}
+              width={focus ? 800 : 520}
+              height={focus ? 1132 : 736}
+              size="stretch"
+              minWidth={250}
+              maxWidth={focus ? 800 : 520}
+              minHeight={354}
+              maxHeight={focus ? 1132 : 736}
+              drawShadow
+              flippingTime={reduceMotion ? 500 : 950}
+              usePortrait
+              startZIndex={10}
+              startPage={pageIndex}
+              autoSize
+              maxShadowOpacity={0.55}
+              showCover
+              mobileScrollSupport
+              swipeDistance={30}
+              clickEventForward
+              useMouseEvents
+              renderOnlyPageLengthChange
+              onInit={(event) => {
+                setPageIndex(event.data.page);
+                setBookReady(true);
+              }}
+              onFlip={(event) => setPageIndex(event.data)}
+            >
+              {Array.from({ length: PAGE_COUNT }, (_, index) => (
+                <ProposalPageSheet key={index + 1} number={index + 1} />
+              ))}
+            </HTMLFlipBook>
+          </div>
+
+          <button
+            type="button"
+            className={`${styles.turnButton} ${styles.turnNext}`}
+            onClick={next}
+            disabled={!bookReady || pageIndex === LAST_PAGE_INDEX}
+            aria-label="Trang sau"
+          >
+            <ArrowRight />
+          </button>
+
+          {focus && (
+            <div className={styles.focusActions}>
+              <button
+                type="button"
+                className={styles.focusControl}
+                onClick={toggleFullscreen}
+                title={fullscreen ? "Thoát toàn màn hình" : "Toàn màn hình"}
+                aria-label={
+                  fullscreen ? "Thoát toàn màn hình" : "Mở toàn màn hình"
+                }
+              >
+                {fullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                <span>{fullscreen ? "Thu nhỏ" : "Toàn màn hình"}</span>
+              </button>
+              <button
+                type="button"
+                className={styles.exitFocus}
+                onClick={exitFocus}
+                aria-label="Thoát chế độ tập trung"
+              >
+                <Minimize size={18} />
+                <span>Thoát tập trung</span>
+              </button>
+            </div>
+          )}
+        </main>
+
+        {!focus && (
+          <footer className={styles.toolbar} aria-label="Thanh công cụ proposal">
+            <button
+              type="button"
+              onClick={() => setIndexOpen(true)}
+              title="Mục lục"
+              aria-label="Mở mục lục"
+            >
+              <Grid2X2 size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={previous}
+              disabled={!bookReady || pageIndex === 0}
+              title="Trang trước"
+              aria-label="Trang trước"
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <div className={styles.progress} aria-hidden="true">
+              <span style={{ width: `${((pageIndex + 1) / PAGE_COUNT) * 100}%` }} />
+            </div>
+            <strong>{pageRange}</strong>
+            <small>/ {PAGE_COUNT}</small>
+            <button
+              type="button"
+              onClick={next}
+              disabled={!bookReady || pageIndex === LAST_PAGE_INDEX}
+              title="Trang sau"
+              aria-label="Trang sau"
+            >
+              <ArrowRight size={16} />
+            </button>
+            <span className={styles.toolbarDivider} aria-hidden="true" />
+            <button
+              type="button"
+              onClick={enterFocus}
+              title="Chế độ tập trung"
+              aria-label="Bật chế độ tập trung"
+            >
+              <Focus size={16} />
+            </button>
+          </footer>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {indexOpen && (
+          <motion.div
+            className={styles.indexOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.section
+              initial={{ y: 24, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 18, opacity: 0 }}
+            >
+              <header>
+                <div>
+                  <small>Document index</small>
+                  <h2>Các phần của cuốn sách</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIndexOpen(false)}
+                  aria-label="Đóng"
+                >
+                  <X />
+                </button>
+              </header>
+              <div className={styles.indexGrid}>
+                {SPREADS.map((item, index) => (
+                  <button
+                    type="button"
+                    key={item.label}
+                    onClick={() => goTo(index)}
+                    className={index === spreadIndex ? styles.current : ""}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <strong>{item.label}</strong>
+                      <small>
+                        {item.type === "spread"
+                          ? "Hai trang đối diện"
+                          : "Một trang độc lập"}
+                      </small>
+                    </div>
+                    <ArrowRight size={14} />
+                  </button>
+                ))}
+              </div>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
 }

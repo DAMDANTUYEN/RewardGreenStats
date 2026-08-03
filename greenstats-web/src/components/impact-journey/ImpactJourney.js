@@ -61,11 +61,6 @@ export function ImpactJourney({
   const [scene, setScene] = useState("idle");
   const [selectedItem, setSelectedItem] = useState(null);
   const [displayAmount, setDisplayAmount] = useState(0);
-  const [isReducedMotion] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
   const closeButtonRef = useRef(null);
   const overlayRef = useRef(null);
   const previousFocusRef = useRef(null);
@@ -122,7 +117,7 @@ export function ImpactJourney({
       sequenceRef.current = controller;
       setSelectedItem(null);
 
-      if (isReducedMotion || items.length === 0) {
+      if (items.length === 0) {
         setDisplayAmount(data.totalContribution);
         setScene("complete");
         return;
@@ -143,10 +138,6 @@ export function ImpactJourney({
         setScene("root-growth");
         await wait(impactTreeModel.timeline.totalDurationMs, signal);
         setScene("complete");
-        window.sessionStorage.setItem(
-          `impact-journey:${data.ticketId}`,
-          "viewed",
-        );
       } catch (error) {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
           console.error(error);
@@ -154,9 +145,7 @@ export function ImpactJourney({
       }
     },
     [
-      data.ticketId,
       data.totalContribution,
-      isReducedMotion,
       items.length,
       startCountUp,
       stopSequence,
@@ -167,27 +156,17 @@ export function ImpactJourney({
   useEffect(() => {
     if (!open) return;
 
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const reducedMotion = mediaQuery.matches;
     previousFocusRef.current = document.activeElement;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const hasViewed = window.sessionStorage.getItem(
-      `impact-journey:${data.ticketId}`,
-    );
     let initialSceneFrame = null;
 
     window.requestAnimationFrame(() => closeButtonRef.current?.focus());
 
     if (status === "ready") {
       initialSceneFrame = window.requestAnimationFrame(() => {
-        if (hasViewed || reducedMotion) {
-          setDisplayAmount(data.totalContribution);
-          setScene("complete");
-        } else {
-          void playSequence();
-        }
+        void playSequence();
       });
     }
 
@@ -229,15 +208,11 @@ export function ImpactJourney({
       previousFocusRef.current?.focus();
     };
   }, [
-    data.ticketId,
-    data.totalContribution,
-    items.length,
     onOpenChange,
     open,
     playSequence,
     status,
     stopSequence,
-    setScene,
   ]);
 
   const close = useCallback(() => {

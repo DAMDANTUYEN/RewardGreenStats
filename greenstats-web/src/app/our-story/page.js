@@ -569,7 +569,7 @@ export default function OurStoryPage() {
           <div className={styles.peopleGrid}>
             <Reveal className={styles.personCard}>
               <StoryImage number={31} alt="Chân dung Nhật An" className={styles.personPortrait} sizes="300px" />
-              <div><span>Code · Drive · Support</span><h3>Nhật An</h3><p>Lập trình viên, tài xế và người nhiều lần thức cùng cả nhóm để chạy deadline.</p></div>
+              <div><span>Code · Drive · Support</span><h3>Nhật An</h3><p>Lập trình viên, tài xế và là người tạo ra GreenStats</p></div>
             </Reveal>
             <Reveal className={styles.personCard} delay={0.06}>
               <StoryImage number={32} alt="Nhóm GreenStats cùng chú kiểm lâm Nam Cát Tiên" className={styles.personLandscape} />

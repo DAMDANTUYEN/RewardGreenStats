@@ -156,7 +156,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white font-poppins p-6 md:p-12">
+    <main className="min-h-screen bg-zinc-950 text-white font-sans p-6 md:p-12">
       {/* HEADER */}
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
         <div>
@@ -372,7 +372,6 @@ export default function AdminDashboard() {
 
       {/* STYLES */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 10px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

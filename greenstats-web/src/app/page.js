@@ -95,7 +95,7 @@ const App = () => {
         <div className="max-w-4xl flex flex-col items-center text-center mb-12 relative">
           <div className="flex items-center justify-center gap-3 mb-3 animate-fade-in">
             <div className="w-6 h-[1px] bg-emerald-500/50"></div>
-            <span className="text-emerald-400 font-bold uppercase tracking-[0.4em] text-[8px] md:text-[9px] font-poppins">
+            <span className="text-emerald-400 font-bold uppercase tracking-[0.4em] text-[8px] md:text-[9px] font-sans">
               {destinations[activeTab].subtitle}
             </span>
             <div className="w-6 h-[1px] bg-emerald-500/50"></div>
@@ -126,7 +126,7 @@ const App = () => {
               href="https://forms.gle/7ZdmfWrk4ksA6vXC9" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="relative z-50 px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-poppins text-center"
+              className="relative z-50 px-10 py-4 bg-emerald-500 text-white font-bold uppercase text-[12px] tracking-[0.1em] rounded-full hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/40 hover:-translate-y-1 flex items-center gap-3 active:scale-95 border border-white/10 font-sans text-center"
             >
               Khảo sát ngay
             </a>
@@ -175,7 +175,7 @@ const App = () => {
               <div className={`absolute inset-0 p-8 flex flex-col justify-end transition-all duration-700 delay-200 pointer-events-none
                 ${activeTab === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               >
-                <p className="uppercase tracking-[0.3em] text-emerald-400 text-[7.5px] font-black mb-1.5 font-poppins">
+                <p className="uppercase tracking-[0.3em] text-emerald-400 text-[7.5px] font-black mb-1.5 font-sans">
                   {dest.location}
                 </p>
                 <div className="flex justify-between items-end">

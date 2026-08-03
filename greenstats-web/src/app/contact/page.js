@@ -100,7 +100,7 @@ export default function ContactPage() {
                     <p>Ngành: <span className="text-white/80 font-bold">{student.major}</span></p>
                   </div>
                   <div className="mt-auto flex justify-center">
-                    <div className="flex items-center justify-center min-w-[140px] px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-[10px] font-bold group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 uppercase tracking-[0.15em] font-poppins">
+                    <div className="flex items-center justify-center min-w-[140px] px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-[10px] font-bold group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 uppercase tracking-[0.15em] font-sans">
                       {student.phone ? `LH: ${student.phone}` : "Đang cập nhật"}
                     </div>
                   </div>

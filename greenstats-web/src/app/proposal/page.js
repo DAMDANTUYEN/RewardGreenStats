@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
   ArrowDown,
@@ -34,6 +35,7 @@ const INTERIOR_SPREAD_COUNT = (PAGE_COUNT - 2) / 2;
 const EXPERIENCE_URL =
   "https://www.greenstats.site/destinations/nam-cat-tien/impact";
 const EXPERIENCE_PAGE_POSITION = { x: 82.46, y: 88.51 };
+const MOBILE_MEDIA_QUERY = "(max-width: 760px)";
 
 const SPREADS = [
   { label: "Bìa trước", pages: [1], type: "cover" },
@@ -55,6 +57,20 @@ function spreadIndexToPageIndex(spreadIndex) {
   if (spreadIndex <= 0) return 0;
   if (spreadIndex >= SPREADS.length - 1) return LAST_PAGE_INDEX;
   return spreadIndex * 2 - 1;
+}
+
+function subscribeToMobileViewport(onStoreChange) {
+  const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
+  mediaQuery.addEventListener("change", onStoreChange);
+  return () => mediaQuery.removeEventListener("change", onStoreChange);
+}
+
+function getMobileViewportSnapshot() {
+  return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+}
+
+function getServerMobileViewportSnapshot() {
+  return false;
 }
 
 const ProposalPageSheet = forwardRef(function ProposalPageSheet(
@@ -123,16 +139,22 @@ function Intro({ launching, onStart }) {
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className={styles.eyebrow}>
-            <BookOpen size={15} /> Green marketing proposal · 20 trang A4
+            <BookOpen size={15} /> GreenStats · Green Marketing Proposal
           </span>
           <h1>
-            Một ý tưởng.
+            <span>Chiến dịch </span>
             <br />
-            <em>Hai mươi trang.</em>
+            <span>marketing </span>
+            <br /> Xanh
+            <br />
+            <em> minh bạch</em>
           </h1>
-          <p>
-            Không gian trình chiếu proposal GreenStats được kể như một cuốn
-            sách — tĩnh lặng, tập trung và giàu chiều sâu.
+          <p className={styles.heroDescription}>
+            Một chiến lược marketing xanh minh bạch, giúp du khách
+            <br />
+            nhìn thấy giá trị thật phía sau mỗi thông điệp và trải nghiệm
+            <br />
+            tại Nam Cát Tiên, Núi Chúa và Cần Giờ.
           </p>
           <button
             type="button"
@@ -140,7 +162,8 @@ function Intro({ launching, onStart }) {
             className={styles.start}
             disabled={launching}
           >
-            {launching ? "Đang mở sách" : "Mở cuốn sách"} <ArrowDown size={17} />
+            {launching ? "Đang mở proposal" : "Khám phá proposal"}{" "}
+            <ArrowDown size={17} />
           </button>
         </motion.div>
         <motion.div
@@ -200,6 +223,11 @@ export default function ProposalPage() {
   const [indexOpen, setIndexOpen] = useState(false);
   const [focus, setFocus] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const isMobile = useSyncExternalStore(
+    subscribeToMobileViewport,
+    getMobileViewportSnapshot,
+    getServerMobileViewportSnapshot,
+  );
   const reduceMotion = useReducedMotion();
 
   const spreadIndex = pageIndexToSpreadIndex(pageIndex);
@@ -215,16 +243,15 @@ export default function ProposalPage() {
     getBook()?.flipNext("top");
   }, [getBook]);
 
-  const goTo = useCallback(
-    (nextSpreadIndex) => {
-      const safeIndex = Math.max(
+  const goToPage = useCallback(
+    (nextPageIndex) => {
+      const safePageIndex = Math.max(
         0,
-        Math.min(SPREADS.length - 1, nextSpreadIndex),
+        Math.min(LAST_PAGE_INDEX, nextPageIndex),
       );
-      const targetPage = spreadIndexToPageIndex(safeIndex);
 
-      if (targetPage !== pageIndex) {
-        getBook()?.flip(targetPage, "top");
+      if (safePageIndex !== pageIndex) {
+        getBook()?.flip(safePageIndex, "top");
       }
       setIndexOpen(false);
     },
@@ -308,12 +335,42 @@ export default function ProposalPage() {
   ]);
 
   const pageRange = useMemo(
-    () =>
-      spread.pages
+    () => {
+      if (isMobile) return String(pageIndex + 1).padStart(2, "0");
+      return spread.pages
         .map((page) => String(page).padStart(2, "0"))
-        .join(" — "),
-    [spread],
+        .join(" — ");
+    },
+    [isMobile, pageIndex, spread],
   );
+
+  const currentPageLabel = useMemo(() => {
+    if (!isMobile) return spread.label;
+    if (pageIndex === 0) return "Bìa trước";
+    if (pageIndex === LAST_PAGE_INDEX) return "Bìa sau";
+    return `Trang ${pageIndex + 1}`;
+  }, [isMobile, pageIndex, spread.label]);
+
+  const navigationItems = useMemo(() => {
+    if (isMobile) {
+      return Array.from({ length: PAGE_COUNT }, (_, index) => ({
+        label:
+          index === 0
+            ? "Bìa trước"
+            : index === LAST_PAGE_INDEX
+              ? "Bìa sau"
+              : `Trang ${index + 1}`,
+        pages: [index + 1],
+        type: index === 0 ? "cover" : index === LAST_PAGE_INDEX ? "back" : "page",
+        targetPageIndex: index,
+      }));
+    }
+
+    return SPREADS.map((item, index) => ({
+      ...item,
+      targetPageIndex: spreadIndexToPageIndex(index),
+    }));
+  }, [isMobile]);
 
   if (!started) {
     return (
@@ -344,7 +401,7 @@ export default function ProposalPage() {
                 GreenStats
               </h1>
             </div>
-            <p>{spread.label}</p>
+            <p>{currentPageLabel}</p>
           </header>
         )}
 
@@ -370,13 +427,15 @@ export default function ProposalPage() {
           >
             <div className={styles.bookGroundShadow} aria-hidden="true" />
             <HTMLFlipBook
-              key={focus ? "proposal-focus" : "proposal-reader"}
+              key={`${focus ? "proposal-focus" : "proposal-reader"}-${
+                isMobile ? "mobile" : "desktop"
+              }`}
               ref={bookRef}
               className={styles.flipBook}
               width={focus ? 800 : 520}
               height={focus ? 1132 : 736}
               size="stretch"
-              minWidth={250}
+              minWidth={isMobile ? 280 : 250}
               maxWidth={focus ? 800 : 520}
               minHeight={354}
               maxHeight={focus ? 1132 : 736}
@@ -515,12 +574,19 @@ export default function ProposalPage() {
                 </button>
               </header>
               <div className={styles.indexGrid}>
-                {SPREADS.map((item, index) => (
+                {navigationItems.map((item, index) => (
                   <button
                     type="button"
                     key={item.label}
-                    onClick={() => goTo(index)}
-                    className={index === spreadIndex ? styles.current : ""}
+                    onClick={() => goToPage(item.targetPageIndex)}
+                    className={
+                      item.targetPageIndex ===
+                      (isMobile
+                        ? pageIndex
+                        : spreadIndexToPageIndex(spreadIndex))
+                        ? styles.current
+                        : ""
+                    }
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div>
@@ -528,7 +594,9 @@ export default function ProposalPage() {
                       <small>
                         {item.type === "spread"
                           ? "Hai trang đối diện"
-                          : "Một trang độc lập"}
+                          : item.type === "page"
+                            ? "Một trang"
+                            : "Một trang độc lập"}
                       </small>
                     </div>
                     <ArrowRight size={14} />

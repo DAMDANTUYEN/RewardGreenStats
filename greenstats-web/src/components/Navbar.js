@@ -4,11 +4,11 @@ import { Search, User, Menu, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 const NAV_ITEMS = [
-  { href: '/our-story', label: 'Hành trình', key: 'story' },
-  { href: '/proposal', label: 'Proposal', key: 'proposal' },
-  { href: '/explore', label: 'KHÁM PHÁ', key: 'explore' },
   { href: '/destinations', label: 'ĐIỂM ĐẾN', key: 'destinations' },
+  { href: '/explore', label: 'KHÁM PHÁ', key: 'explore' },
+  { href: '/proposal', label: 'Proposal', key: 'proposal' },
   { href: '/spin', label: 'Vòng quay', key: 'spin' },
+  { href: '/our-story', label: 'Hành trình', key: 'story' },
   { href: '/contact', label: 'Liên hệ', key: 'contact' },
 ];
 
@@ -46,7 +46,7 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden lg:flex items-center gap-7 text-[11px] font-semibold tracking-[0.16em] uppercase opacity-75 font-poppins">
+        <ul className="hidden lg:flex items-center gap-7 text-[11px] font-semibold tracking-[0.16em] uppercase opacity-75 font-sans">
           {NAV_ITEMS.map(item => (
             <li key={item.key} className={`cursor-pointer transition-colors hover:text-emerald-400 ${active === item.key ? 'text-emerald-400 opacity-100' : ''}`}>
               <Link href={item.href}>{item.label}</Link>
@@ -86,7 +86,7 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
           <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 p-3 text-white/50 hover:text-white transition-colors">
             <X size={32} strokeWidth={1.5} />
           </button>
-          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-poppins">
+          <ul className="flex flex-col items-center gap-10 text-xl font-bold tracking-[0.2em] uppercase font-sans">
             {NAV_ITEMS.map(item => (
               <li key={item.key}>
                 <Link
@@ -103,7 +103,6 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
       )}
 
       <style>{`
-        .font-poppins { font-family: var(--font-poppins), sans-serif; }
         @keyframes fadeInMobile { from { opacity: 0; } to { opacity: 1; } }
         .animate-fade-in-mobile { animation: fadeInMobile 0.4s ease-out forwards; }
       `}</style>

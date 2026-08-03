@@ -10,7 +10,7 @@
     radial-gradient(circle at 50% 18%, rgba(31, 111, 79, 0.18), transparent 42%),
     linear-gradient(145deg, #07100c, #020604 72%);
   color: #edf8f1;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
 }
 
 .ambient {
@@ -28,7 +28,8 @@
   position: absolute;
   inset: 0;
   z-index: 3;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .hero {
@@ -65,28 +66,44 @@
 
 .hero h1 {
   margin: 30px 0 26px;
-  font-size: clamp(3.5rem, 7vw, 7rem);
+  font-size: clamp(2.2rem, 3.85vw, 4.45rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.07em;
+  line-height: 1.02;
+  letter-spacing: -0.06em;
   text-transform: uppercase;
+}
+
+.hero h1 > span,
+.hero h1 > em {
+  white-space: nowrap;
 }
 
 .hero h1 em {
   color: transparent;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-style: italic;
   font-weight: 300;
   letter-spacing: -0.055em;
-  text-transform: none;
+  text-transform: uppercase;
   -webkit-text-stroke: 1px rgba(237, 248, 241, 0.7);
 }
 
-.hero p {
+.heroDescription {
   max-width: 610px;
   color: rgba(237, 248, 241, 0.52);
   font-size: 14px;
   line-height: 1.8;
+}
+
+.hero .heroStats {
+  max-width: 610px;
+  margin-top: 22px;
+  color: rgba(146, 244, 199, 0.64);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  text-transform: uppercase;
 }
 
 .start {
@@ -276,7 +293,7 @@
 
 .bookBadge strong {
   color: var(--green);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: 22px;
   font-weight: 400;
 }
@@ -430,7 +447,7 @@
     0 0 0 4px rgba(22, 199, 132, 0.18);
   color: #042d20;
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -596,7 +613,7 @@
 .paperCaption strong {
   display: block;
   margin: 7px 0 4px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: clamp(13px, 1.6vw, 23px);
   font-weight: 400;
 }
@@ -613,7 +630,7 @@
   bottom: 3.8%;
   z-index: 3;
   color: rgba(23, 59, 45, 0.34);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: clamp(7px, 0.6vw, 9px);
 }
 
@@ -863,7 +880,7 @@
 
 .indexOverlay header h2 {
   margin-top: 5px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: 24px;
   font-weight: 400;
 }
@@ -911,7 +928,7 @@
 
 .indexGrid > button > span {
   color: var(--green);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
   font-size: 18px;
 }
 
@@ -961,11 +978,16 @@
   }
 
   .hero h1 {
-    font-size: clamp(3rem, 14vw, 5.3rem);
+    font-size: clamp(1.65rem, 8.5vw, 2.65rem);
   }
 
-  .hero p {
+  .heroDescription {
     font-size: 12px;
+  }
+
+  .hero .heroStats {
+    font-size: 8px;
+    letter-spacing: 0.1em;
   }
 
   .readerHeader {

@@ -1,11 +1,11 @@
 "use client";
 import Link from 'next/link';
-import { Search, User, Menu, X, Zap, LogOut } from 'lucide-react';
+import { Search, User, Menu, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Giới thiệu', key: 'home' },
   { href: '/our-story', label: 'Hành trình', key: 'story' },
+  { href: '/proposal', label: 'Proposal', key: 'proposal' },
   { href: '/explore', label: 'KHÁM PHÁ', key: 'explore' },
   { href: '/destinations', label: 'ĐIỂM ĐẾN', key: 'destinations' },
   { href: '/spin', label: 'Vòng quay', key: 'spin' },
@@ -31,22 +31,19 @@ const Navbar = ({ active = 'home', user = null, spinsLeft = 0, onLogin = null, o
     <>
       <nav className="relative z-50 flex items-center justify-between px-8 py-6 md:px-16">
         {/* Logo + Brand */}
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <Link href="/">
+        <Link href="/" aria-label="Về trang chủ GreenStats" className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
               <div className="absolute -inset-3 bg-emerald-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative p-1.5 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/50 group-hover:scale-110 flex items-center justify-center shadow-xl">
                 {LOGO_SVG}
               </div>
             </div>
-          </Link>
-          <Link href="/">
+
             <div className="flex items-center transition-all duration-500 group-hover:tracking-wider">
               <span className="text-[16px] font-black uppercase tracking-tight text-white drop-shadow-md">Green</span>
               <span className="text-[16px] font-extrabold uppercase tracking-tight text-emerald-500 drop-shadow-md">Stats</span>
             </div>
-          </Link>
-        </div>
+        </Link>
 
         {/* Desktop links */}
         <ul className="hidden lg:flex items-center gap-7 text-[11px] font-semibold tracking-[0.16em] uppercase opacity-75 font-poppins">

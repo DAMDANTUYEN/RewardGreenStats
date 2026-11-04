@@ -430,47 +430,6 @@
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.experienceLink {
-  position: absolute;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 112px;
-  height: 42px;
-  padding: 0 20px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 999px;
-  background: #16c784;
-  box-shadow:
-    0 12px 30px rgba(2, 45, 30, 0.34),
-    0 0 0 4px rgba(22, 199, 132, 0.18);
-  color: #042d20;
-  cursor: pointer;
-  font-family: var(--font-be-vietnam-pro), Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  text-decoration: none;
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s,
-    background 0.2s;
-}
-
-.experienceLink:hover,
-.experienceLink:focus-visible {
-  background: #34d399;
-  box-shadow:
-    0 16px 36px rgba(2, 45, 30, 0.42),
-    0 0 0 6px rgba(22, 199, 132, 0.22);
-  outline: none;
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
 @media (min-width: 761px) {
   .coverCentered .flipBook {
     transform: translateX(-25%);
@@ -964,13 +923,6 @@
     top: 0;
     width: min(91vw, 384px);
     margin: 4px auto 22px;
-  }
-
-  .experienceLink {
-    min-width: 92px;
-    height: 36px;
-    padding: 0 15px;
-    font-size: 10px;
   }
 
   .bookBadge {

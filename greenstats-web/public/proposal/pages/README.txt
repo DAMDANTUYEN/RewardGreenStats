@@ -1,2 +1,2 @@
-20 trang của “GREEN MARKETING PROPOSAL.zip” đã được nhập tại đây dưới dạng
-01.jpg đến 20.jpg. Mỗi ảnh có kích thước 1414 × 2000 px.
+23 trang của “GREEN MARKETING PROPOSAL.pdf” đã được nhập tại đây dưới dạng
+01.jpg đến 23.jpg. Mỗi ảnh có kích thước 1158 × 1638 px (140 DPI, JPEG q80).

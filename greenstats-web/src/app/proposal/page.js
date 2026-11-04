@@ -29,34 +29,42 @@ import Navbar from "@/components/Navbar";
 
 import styles from "./proposal.module.css";
 
-const PAGE_COUNT = 20;
+const PAGE_COUNT = 23;
 const LAST_PAGE_INDEX = PAGE_COUNT - 1;
-const INTERIOR_SPREAD_COUNT = (PAGE_COUNT - 2) / 2;
-const EXPERIENCE_URL =
-  "https://www.greenstats.site/destinations/nam-cat-tien/impact";
-const EXPERIENCE_PAGE_POSITION = { x: 82.46, y: 88.51 };
 const MOBILE_MEDIA_QUERY = "(max-width: 760px)";
 
 const SPREADS = [
   { label: "Bìa trước", pages: [1], type: "cover" },
-  ...Array.from({ length: INTERIOR_SPREAD_COUNT }, (_, index) => ({
-    label: `Trang ${index * 2 + 2}–${index * 2 + 3}`,
-    pages: [index * 2 + 2, index * 2 + 3],
-    type: "spread",
-  })),
-  { label: "Bìa sau", pages: [PAGE_COUNT], type: "back" },
+  ...Array.from({ length: Math.ceil((PAGE_COUNT - 1) / 2) }, (_, index) => {
+    const startPage = index * 2 + 2;
+    const endPage = Math.min(startPage + 1, PAGE_COUNT);
+
+    if (startPage === endPage) {
+      return {
+        label: startPage === PAGE_COUNT ? "Bìa sau" : `Trang ${startPage}`,
+        pages: [startPage],
+        type: startPage === PAGE_COUNT ? "back" : "page",
+      };
+    }
+
+    return {
+      label: `Trang ${startPage}–${endPage}`,
+      pages: [startPage, endPage],
+      type: "spread",
+    };
+  }),
 ];
 
 function pageIndexToSpreadIndex(pageIndex) {
-  if (pageIndex <= 0) return 0;
-  if (pageIndex >= LAST_PAGE_INDEX) return SPREADS.length - 1;
-  return Math.floor((pageIndex + 1) / 2);
+  const pageNumber = pageIndex + 1;
+  const spreadIndex = SPREADS.findIndex((item) =>
+    item.pages.includes(pageNumber),
+  );
+  return spreadIndex === -1 ? SPREADS.length - 1 : spreadIndex;
 }
 
 function spreadIndexToPageIndex(spreadIndex) {
-  if (spreadIndex <= 0) return 0;
-  if (spreadIndex >= SPREADS.length - 1) return LAST_PAGE_INDEX;
-  return spreadIndex * 2 - 1;
+  return SPREADS[spreadIndex].pages[0] - 1;
 }
 
 function subscribeToMobileViewport(onStoreChange) {
@@ -99,23 +107,6 @@ const ProposalPageSheet = forwardRef(function ProposalPageSheet(
         loading={number === PAGE_COUNT ? "eager" : undefined}
         draggable={false}
       />
-      {number === 6 && (
-        <a
-          className={styles.experienceLink}
-          href={EXPERIENCE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            left: `${EXPERIENCE_PAGE_POSITION.x}%`,
-            top: `${EXPERIENCE_PAGE_POSITION.y}%`,
-          }}
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => event.stopPropagation()}
-          aria-label="Trải nghiệm hành trình tác động tại Nam Cát Tiên"
-        >
-          Trải nghiệm
-        </a>
-      )}
       <span className={styles.pageEdge} aria-hidden="true" />
     </article>
   );
@@ -194,7 +185,7 @@ function Intro({ launching, onStart }) {
             </div>
             <div className={styles.bookBack}>
               <Image
-                src="/proposal/pages/20.jpg"
+                src={`/proposal/pages/${PAGE_COUNT}.jpg`}
                 alt=""
                 fill
                 sizes="360px"

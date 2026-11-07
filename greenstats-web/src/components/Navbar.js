@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: '/proposal', label: 'Proposal', key: 'proposal' },
   { href: '/spin', label: 'Vòng quay', key: 'spin' },
   { href: '/our-story', label: 'Hành trình', key: 'story' },
-  { href: '/contact', label: 'Liên hệ', key: 'contact' },
+  // { href: '/contact', label: 'Liên hệ', key: 'contact' },
 ];
 
 const LOGO_SVG = (
